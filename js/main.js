@@ -1,0 +1,29 @@
+
+onload = () => {
+  // Play music when arriving from heart click (index.html)
+  if (sessionStorage.getItem('playFlowerMusic') === 'true') {
+    sessionStorage.removeItem('playFlowerMusic');
+    const flowerMusic = new Audio('music/sound.mp3');
+    flowerMusic.play().catch(() => {});
+  }
+
+  const c = setTimeout(() => {
+    document.body.classList.remove("not-loaded");
+
+    const titles = ('❤️❤️❤️').split('')
+    const titleElement = document.getElementById('title');
+    let index = 0;
+
+    function appendTitle() {
+      if (index < titles.length) {
+        titleElement.innerHTML += titles[index];
+        index++;
+        setTimeout(appendTitle, 300); // 1000ms delay
+      }
+    }
+
+    appendTitle();
+
+    clearTimeout(c);
+  }, 1000);
+};
