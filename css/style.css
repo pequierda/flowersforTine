@@ -174,46 +174,52 @@ body {
   filter: blur(8vmin);
 }
 
-/* Tulip-style petals - tall, oval, curving inward to form closed cup */
+/* Tulip petals - elongated with pointed tips, forming classic tulip cup shape */
 .flower__leaf {
   position: absolute;
   bottom: 0;
   left: 50%;
-  width: 5.5vmin;
-  height: 15vmin;
-  border-radius: 50% 50% 45% 45% / 60% 60% 40% 40%;
+  width: 6vmin;
+  height: 18vmin;
+  border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
   background-color: #e74c3c;
-  background-image: linear-gradient(to top, #c0392b, #e74c3c 40%, #ff6b9d);
+  background-image: linear-gradient(to bottom, #ff6b9d 0%, #e74c3c 40%, #c0392b 100%);
   transform-origin: bottom center;
   opacity: 0.95;
-  box-shadow: inset 0 0 2vmin rgba(255, 255, 255, 0.3), 0 0 1vmin rgba(255, 107, 157, 0.2);
+  box-shadow: inset 0 -2vmin 3vmin rgba(180, 30, 30, 0.4), inset 0 0 1vmin rgba(255, 255, 255, 0.2), 0 0 2vmin rgba(255, 107, 157, 0.3);
 }
 
 .flower__leaf--1 {
-  transform: translate(-50%, -2%) rotateY(10deg) rotateX(78deg);
+  transform: translate(-50%, -5%) rotateY(15deg) rotateX(75deg);
+  border-radius: 55% 45% 50% 50% / 65% 55% 35% 45%;
+  height: 17vmin;
 }
 
 .flower__leaf--2 {
-  transform: translate(-50%, -4%) rotateX(76deg);
+  transform: translate(-50%, -3%) rotateX(72deg);
+  border-radius: 45% 55% 50% 50% / 55% 65% 35% 45%;
+  height: 18vmin;
 }
 
 .flower__leaf--3 {
-  transform: translate(-50%, -2%) rotateY(-10deg) rotateX(78deg);
+  transform: translate(-50%, -5%) rotateY(-15deg) rotateX(75deg);
+  border-radius: 55% 45% 50% 50% / 65% 55% 35% 45%;
+  height: 17vmin;
 }
 
 .flower__leaf--4 {
-  width: 5vmin;
-  height: 12vmin;
+  width: 5.5vmin;
+  height: 15vmin;
   transform-origin: bottom center;
-  border-radius: 50% 50% 40% 40% / 55% 55% 45% 45%;
-  transform: translate(-50%, 0%) rotateX(85deg);
-  background-image: linear-gradient(to top, #c0392b, #e74c3c 50%, #ff6b9d);
+  border-radius: 50% 50% 45% 45% / 60% 60% 40% 40%;
+  transform: translate(-50%, 0%) rotateX(82deg);
+  background-image: linear-gradient(to bottom, #ff6b9d 0%, #e74c3c 50%, #c0392b 100%);
   z-index: -1;
-  opacity: 0.92;
-  -webkit-transform: translate(-50%, 0%) rotateX(85deg);
-  -moz-transform: translate(-50%, 0%) rotateX(85deg);
-  -ms-transform: translate(-50%, 0%) rotateX(85deg);
-  -o-transform: translate(-50%, 0%) rotateX(85deg);
+  opacity: 0.9;
+  -webkit-transform: translate(-50%, 0%) rotateX(82deg);
+  -moz-transform: translate(-50%, 0%) rotateX(82deg);
+  -ms-transform: translate(-50%, 0%) rotateX(82deg);
+  -o-transform: translate(-50%, 0%) rotateX(82deg);
 }
 
 /* Tulip: center hidden inside closed cup */
@@ -758,13 +764,13 @@ body {
   }
 }
 
-/* Tulip front petals - elongated oval cup shape */
+/* Tulip front petals - elongated with pointed tips */
 .flower__g-front__leaf {
   width: 6vmin;
-  height: 14vmin;
-  border-radius: 50% 50% 45% 45% / 55% 55% 45% 45%;
-  box-shadow: inset 0 2px 1vmin hsla(0, 0%, 100%, 0.15);
-  background-image: linear-gradient(to top, #c0392b, #e74c3c 45%, #ff6b9d);
+  height: 16vmin;
+  border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+  box-shadow: inset 0 -2vmin 3vmin rgba(180, 30, 30, 0.4), inset 0 0 1vmin rgba(255, 255, 255, 0.2);
+  background-image: linear-gradient(to bottom, #ff6b9d 0%, #e74c3c 40%, #c0392b 100%);
   -webkit-mask-image: linear-gradient(to bottom right, #fff 40%, transparent 60%);
   mask-image: linear-gradient(to bottom right, #fff 40%, transparent 60%);
   transform-origin: bottom center;
@@ -805,16 +811,16 @@ body {
   z-index: 1;
 }
 
-/* Tulip side petals - elongated oval */
+/* Tulip side petals - elongated with pointed tips */
 .flower__g-fr__leaf {
   position: absolute;
   top: 0;
   left: 0;
   width: 6vmin;
-  height: 14vmin;
-  border-radius: 50% 50% 45% 45% / 55% 55% 45% 45%;
-  box-shadow: inset 0 2px 1vmin hsla(0, 0%, 100%, 0.15);
-  background-image: linear-gradient(to top, #c0392b, #e74c3c 45%, #ff6b9d);
+  height: 16vmin;
+  border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+  box-shadow: inset 0 -2vmin 3vmin rgba(180, 30, 30, 0.4), inset 0 0 1vmin rgba(255, 255, 255, 0.2);
+  background-image: linear-gradient(to bottom, #ff6b9d 0%, #e74c3c 40%, #c0392b 100%);
   -webkit-mask-image: linear-gradient(135deg, #fff 35%, transparent 55%);
   mask-image: linear-gradient(135deg, #fff 35%, transparent 55%);
   transform-origin: bottom center;
@@ -1215,6 +1221,181 @@ body {
 
 .not-loaded * {
   animation-play-state: paused !important;
+}
+
+/* Photo Carousel - Small slideshow below flowers */
+.carousel-container {
+  position: fixed;
+  bottom: 2vmin;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 100;
+  pointer-events: auto;
+  opacity: 0;
+  transition: opacity 0.8s ease-in-out;
+}
+
+.carousel-container.visible {
+  opacity: 1;
+}
+
+.carousel {
+  position: relative;
+  width: 320px;
+  height: 80px;
+  border-radius: 15px;
+  overflow: hidden;
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.5), 0 0 15px rgba(255, 107, 157, 0.3);
+  background: rgba(0, 0, 0, 0.7);
+  border: 2px solid rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+}
+
+.carousel-slides {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.carousel-slide {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  transform: translateX(20px);
+  transition: all 0.6s ease-in-out;
+  pointer-events: none;
+}
+
+.carousel-slide.active {
+  opacity: 1;
+  transform: translateX(0);
+  pointer-events: auto;
+}
+
+.carousel-slide img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 13px;
+}
+
+/* Navigation buttons */
+.carousel-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(255, 107, 157, 0.8);
+  color: white;
+  border: none;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  z-index: 10;
+}
+
+.carousel-btn:hover {
+  background: rgba(255, 107, 157, 1);
+  transform: translateY(-50%) scale(1.1);
+}
+
+.carousel-btn-prev {
+  left: 5px;
+}
+
+.carousel-btn-next {
+  right: 5px;
+}
+
+/* Dots indicator */
+.carousel-dots {
+  position: absolute;
+  bottom: 5px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 5px;
+  z-index: 10;
+}
+
+.dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.4);
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.dot.active,
+.dot:hover {
+  background: rgba(255, 107, 157, 1);
+  transform: scale(1.3);
+}
+
+/* Responsive carousel */
+@media (max-width: 768px) {
+  .carousel-container {
+    bottom: 1.5vmin;
+  }
+
+  .carousel {
+    width: 260px;
+    height: 65px;
+  }
+}
+
+/* Mobile view - carousel moves to center to be highlighted */
+@media (max-width: 480px) {
+  .carousel-container {
+    top: 50%;
+    left: 50%;
+    bottom: auto;
+    transform: translate(-50%, -50%);
+    z-index: 200;
+  }
+
+  .carousel {
+    width: 400px;
+    height: 250px;
+    border-radius: 20px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.7), 0 0 30px rgba(255, 107, 157, 0.5);
+  }
+
+  .carousel-btn {
+    width: 28px;
+    height: 48px;
+    font-size: 14px;
+  }
+
+  .carousel-dots {
+    bottom: 8px;
+    gap: 8px;
+  }
+
+  .dot {
+    width: 8px;
+    height: 8px;
+  }
+
+  /* Adjust flower scale on mobile to make room for centered carousel */
+  .flowers {
+    transform: scale(0.7);
+    bottom: -5vmin;
+  }
+
+  .title {
+    font-size: 40px;
+    margin-top: 20px;
+  }
 }
 
 /*# sourceMappingURL=style.css.map */

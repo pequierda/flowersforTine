@@ -16,6 +16,42 @@
   <!-- Background -->
   <div class="night"></div>
 
+  <!-- Photo Carousel - Small slideshow below flowers -->
+  <div class="carousel-container">
+    <div class="carousel">
+      <div class="carousel-slides">
+        <div class="carousel-slide active">
+          <img src="images/1.jpg" alt="Photo 1">
+        </div>
+        <div class="carousel-slide">
+          <img src="images/2.jpg" alt="Photo 2">
+        </div>
+        <div class="carousel-slide">
+          <img src="images/3.jpg" alt="Photo 3">
+        </div>
+        <div class="carousel-slide">
+          <img src="images/4.jpg" alt="Photo 4">
+        </div>
+        <div class="carousel-slide">
+          <img src="images/5.jpg" alt="Photo 5">
+        </div>
+        <div class="carousel-slide">
+          <img src="images/6.jpg" alt="Photo 6">
+        </div>
+      </div>
+      <button class="carousel-btn carousel-btn-prev" onclick="prevSlide()">&#10094;</button>
+      <button class="carousel-btn carousel-btn-next" onclick="nextSlide()">&#10095;</button>
+      <div class="carousel-dots">
+        <span class="dot active" onclick="currentSlide(1)"></span>
+        <span class="dot" onclick="currentSlide(2)"></span>
+        <span class="dot" onclick="currentSlide(3)"></span>
+        <span class="dot" onclick="currentSlide(4)"></span>
+        <span class="dot" onclick="currentSlide(5)"></span>
+        <span class="dot" onclick="currentSlide(6)"></span>
+      </div>
+    </div>
+  </div>
+
   <!-- Flower -->
   <div class="flowers">
     <div class="flower flower--1">
