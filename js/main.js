@@ -97,30 +97,40 @@ const albums = {
   }
 };
 
-// Scan album to detect available photos (max 10)
+// Scan album to detect available photos (max 10) - supports both .jpg and .gif
 async function scanAlbumPhotos(albumName) {
   const album = albums[albumName];
   const startNum = album.start;
   
-  // Create an array to track which photos exist
+  // Create an array to track which photos exist with their extension
   const existingPhotos = [];
   
   // Check up to MAX_PHOTOS_PER_ALBUM photos
   for (let i = 0; i < MAX_PHOTOS_PER_ALBUM; i++) {
     const photoNum = startNum + i;
-    const photoUrl = `images/${albumName}/${photoNum}.jpg`;
+    let found = false;
     
-    try {
-      // Try to fetch the image header (don't load full image)
-      const response = await fetch(photoUrl, { method: 'HEAD' });
-      if (response.ok) {
-        existingPhotos.push(photoNum);
-      } else {
-        // If we get a 404, assume no more sequential photos
-        break;
+    // Check for .jpg first, then .gif
+    const extensions = ['.jpg', '.gif'];
+    for (const ext of extensions) {
+      const photoUrl = `images/${albumName}/${photoNum}${ext}`;
+      
+      try {
+        // Try to fetch the image header (don't load full image)
+        const response = await fetch(photoUrl, { method: 'HEAD' });
+        if (response.ok) {
+          existingPhotos.push({ num: photoNum, ext: ext });
+          found = true;
+          break; // Found this photo, move to next number
+        }
+      } catch (error) {
+        // Try next extension
+        continue;
       }
-    } catch (error) {
-      // If fetch fails, assume photo doesn't exist
+    }
+    
+    // If neither extension found, assume no more sequential photos
+    if (!found) {
       break;
     }
   }
@@ -198,20 +208,23 @@ async function loadAlbumPhotos(albumName) {
     return;
   }
   
-  availablePhotos.forEach((photoNum, index) => {
+  availablePhotos.forEach((photoInfo, index) => {
+    const photoNum = photoInfo.num;
+    const ext = photoInfo.ext;
     const isFirst = index === 0;
+    const photoSrc = `images/${albumName}/${photoNum}${ext}`;
     
     // Main photo display
     const photoItem = document.createElement('div');
     photoItem.className = 'photo-item' + (isFirst ? ' active' : '');
-    photoItem.innerHTML = `<img src="images/${albumName}/${photoNum}.jpg" alt="Photo ${photoNum}">`;
-    photoItem.onclick = () => openPhoto(albumName, photoNum);
+    photoItem.innerHTML = `<img src="${photoSrc}" alt="Photo ${photoNum}">`;
+    photoItem.onclick = () => openPhoto(albumName, photoNum, ext);
     albumContentWrapper.appendChild(photoItem);
     
     // Thumbnail
     const thumb = document.createElement('div');
     thumb.className = 'thumb' + (isFirst ? ' active' : '');
-    thumb.innerHTML = `<img src="images/${albumName}/${photoNum}.jpg" alt="Thumb ${photoNum}">`;
+    thumb.innerHTML = `<img src="${photoSrc}" alt="Thumb ${photoNum}">`;
     thumb.onclick = () => {
       document.querySelectorAll('.thumb').forEach(t => t.classList.remove('active'));
       thumb.classList.add('active');
@@ -219,7 +232,7 @@ async function loadAlbumPhotos(albumName) {
       const allPhotos = document.querySelectorAll('.album-content .photo-item');
       allPhotos.forEach(p => p.classList.remove('active'));
       const targetPhoto = Array.from(allPhotos).find(p => 
-        p.querySelector('img').src.includes(`${photoNum}.jpg`)
+        p.querySelector('img').src.includes(`${photoNum}${ext}`)
       );
       if (targetPhoto) {
         targetPhoto.classList.add('active');
@@ -379,8 +392,8 @@ function closePhotoModal() {
 }
 
 // Open photo in modal view
-function openPhoto(albumName, photoNum) {
-  const imageSrc = `images/${albumName}/${photoNum}.jpg`;
+function openPhoto(albumName, photoNum, ext = '.jpg') {
+  const imageSrc = `images/${albumName}/${photoNum}${ext}`;
   showPhotoModal(imageSrc);
 }
 
