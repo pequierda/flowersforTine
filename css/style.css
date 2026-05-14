@@ -1398,4 +1398,462 @@ body {
   }
 }
 
+/* Netflix-style Album Menu - Centered */
+.album-menu-container {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 100;
+  width: 90%;
+  max-width: 800px;
+  opacity: 0;
+  transition: opacity 0.8s ease-in-out;
+}
+
+.album-menu-container.visible {
+  opacity: 1;
+}
+
+/* Album Category Tabs */
+.album-categories {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  margin-bottom: 10px;
+}
+
+.album-category {
+  background: rgba(255, 107, 157, 0.2);
+  border: 2px solid rgba(255, 107, 157, 0.5);
+  border-radius: 25px;
+  padding: 8px 20px;
+  color: white;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.3s ease;
+  font-size: 14px;
+  backdrop-filter: blur(10px);
+}
+
+.album-category:hover {
+  background: rgba(255, 107, 157, 0.4);
+  transform: translateY(-2px);
+}
+
+.album-category.active {
+  background: rgba(255, 107, 157, 0.6);
+  border-color: #ff6b9d;
+  box-shadow: 0 0 15px rgba(255, 107, 157, 0.5);
+}
+
+.category-icon {
+  font-size: 18px;
+}
+
+.category-name {
+  font-weight: 500;
+}
+
+/* Photo Display Area - Netflix Style */
+.album-display {
+  position: relative;
+  background: rgba(0, 0, 0, 0.8);
+  border-radius: 15px;
+  overflow: hidden;
+  border: 2px solid rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+}
+
+.album-content {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 15px;
+  overflow: hidden;
+  position: relative;
+  height: 230px;
+  perspective: 1000px;
+}
+
+.album-content-wrapper {
+  position: relative;
+  width: 200px;
+  height: 200px;
+  transform-style: preserve-3d;
+  transition: transform 0.6s ease-in-out;
+}
+
+.album-content .photo-item {
+  position: absolute;
+  width: 180px;
+  height: 200px;
+  border-radius: 10px;
+  overflow: hidden;
+  transition: all 0.6s ease-in-out;
+  cursor: pointer;
+  backface-visibility: hidden;
+}
+
+.album-content .photo-item.active {
+  transform: translateX(0) scale(1) !important;
+  opacity: 1;
+  z-index: 10;
+  filter: brightness(1);
+}
+
+.album-content .photo-item.prev {
+  transform: translateX(-140px) scale(0.75) !important;
+  opacity: 0.5;
+  z-index: 5;
+  filter: brightness(0.7);
+}
+
+.album-content .photo-item.next {
+  transform: translateX(140px) scale(0.75) !important;
+  opacity: 0.5;
+  z-index: 5;
+  filter: brightness(0.7);
+}
+
+.album-content .photo-item.hidden {
+  transform: translateX(0) scale(0) !important;
+  opacity: 0;
+  z-index: 1;
+}
+
+.album-content .photo-item:hover {
+  filter: brightness(1.1);
+}
+
+.album-content .photo-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+/* Modal container for enlarged photos */
+.photo-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 2000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+
+.photo-modal.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.photo-modal-backdrop {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(5px);
+}
+
+.photo-modal-content {
+  position: relative;
+  z-index: 1;
+  max-width: 90vw;
+  max-height: 90vh;
+  border-radius: 15px;
+  overflow: hidden;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.9);
+  animation: modalZoomIn 0.3s ease;
+}
+
+@keyframes modalZoomIn {
+  from {
+    transform: scale(0.8);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.photo-modal-content img {
+  display: block;
+  max-width: 100%;
+  max-height: 90vh;
+  object-fit: contain;
+}
+
+.photo-modal-close {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  width: 40px;
+  height: 40px;
+  background: rgba(255, 107, 157, 0.8);
+  border: none;
+  border-radius: 50%;
+  color: white;
+  font-size: 24px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  z-index: 10;
+}
+
+.photo-modal-close:hover {
+  background: rgba(255, 107, 157, 1);
+  transform: scale(1.1);
+}
+
+.album-content .photo-item.enlarged {
+  /* Remove old enlarged styles */
+  opacity: 0.3 !important;
+}
+
+/* Disable nav buttons when photo is enlarged */
+.album-nav.disabled {
+  pointer-events: none;
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+/* Navigation Arrows */
+.album-nav {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(255, 107, 157, 0.8);
+  color: white;
+  border: none;
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  z-index: 10;
+}
+
+.album-nav:hover {
+  background: rgba(255, 107, 157, 1);
+  transform: translateY(-50%) scale(1.1);
+}
+
+.album-nav-left {
+  left: 10px;
+}
+
+.album-nav-right {
+  right: 10px;
+}
+
+/* Thumbnail Strip */
+.thumbnail-strip {
+  display: flex;
+  gap: 5px;
+  justify-content: center;
+  margin-top: 8px;
+  padding: 5px;
+  background: rgba(0, 0, 0, 0.5);
+  border-radius: 10px;
+}
+
+.thumbnail-strip .thumb {
+  width: 40px;
+  height: 30px;
+  border-radius: 5px;
+  overflow: hidden;
+  cursor: pointer;
+  opacity: 0.6;
+  transition: all 0.3s ease;
+  border: 2px solid transparent;
+}
+
+.thumbnail-strip .thumb:hover,
+.thumbnail-strip .thumb.active {
+  opacity: 1;
+  border-color: #ff6b9d;
+  transform: scale(1.1);
+}
+
+.thumbnail-strip .thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .album-menu-container {
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 95%;
+  }
+
+  .album-category {
+    padding: 6px 14px;
+    font-size: 12px;
+  }
+
+  .album-content {
+    height: 200px;
+  }
+
+  .album-content-wrapper {
+    width: 160px;
+    height: 160px;
+  }
+
+  .album-content .photo-item {
+    width: 140px;
+    height: 180px;
+  }
+
+  .album-content .photo-item.prev {
+    transform: translateX(-110px) scale(0.7) !important;
+  }
+
+  .album-content .photo-item.next {
+    transform: translateX(110px) scale(0.7) !important;
+  }
+
+  .category-name {
+    display: none;
+  }
+
+  .album-nav {
+    width: 32px;
+    height: 32px;
+    font-size: 14px;
+  }
+
+  .thumbnail-strip .thumb {
+    width: 35px;
+    height: 28px;
+  }
+}
+
+@media (max-width: 480px) {
+  .album-menu-container {
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 98%;
+    max-width: none;
+  }
+
+  .album-categories {
+    gap: 5px;
+    margin-bottom: 8px;
+  }
+
+  .album-category {
+    padding: 4px 8px;
+    font-size: 11px;
+  }
+
+  .category-icon {
+    font-size: 14px;
+  }
+
+  .album-display {
+    border-radius: 10px;
+  }
+
+  .album-content {
+    height: 180px;
+    padding: 10px;
+  }
+
+  .album-content-wrapper {
+    width: 140px;
+    height: 140px;
+  }
+
+  .album-content .photo-item {
+    width: 120px;
+    height: 160px;
+    border-radius: 8px;
+  }
+
+  .album-content .photo-item.active {
+    transform: translateX(0) scale(0.95) !important;
+  }
+
+  .album-content .photo-item.prev {
+    transform: translateX(-90px) scale(0.6) !important;
+  }
+
+  .album-content .photo-item.next {
+    transform: translateX(90px) scale(0.6) !important;
+  }
+
+  .album-nav {
+    width: 28px;
+    height: 28px;
+    font-size: 12px;
+  }
+
+  .album-nav-left {
+    left: 5px;
+  }
+
+  .album-nav-right {
+    right: 5px;
+  }
+
+  .thumbnail-strip {
+    gap: 3px;
+    margin-top: 6px;
+    padding: 4px;
+  }
+
+  .thumbnail-strip .thumb {
+    width: 28px;
+    height: 22px;
+    border-radius: 4px;
+  }
+}
+
+@media (max-width: 360px) {
+  .album-content {
+    height: 160px;
+  }
+
+  .album-content-wrapper {
+    width: 120px;
+    height: 120px;
+  }
+
+  .album-content .photo-item {
+    width: 100px;
+    height: 140px;
+  }
+
+  .album-content .photo-item.prev {
+    transform: translateX(-75px) scale(0.55) !important;
+  }
+
+  .album-content .photo-item.next {
+    transform: translateX(75px) scale(0.55) !important;
+  }
+}
+
 /*# sourceMappingURL=style.css.map */
