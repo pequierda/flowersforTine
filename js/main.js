@@ -172,13 +172,12 @@ function showAlbum(albumName) {
 // Load album photos with auto-detection
 async function loadAlbumPhotos(albumName) {
   const albumContentWrapper = document.getElementById('album-content-wrapper');
-  const albumContent = document.getElementById('album-content');
   const thumbnailStrip = document.getElementById('thumbnail-strip');
   const album = albums[albumName];
   
-  // Show loading spinner
-  albumContent.innerHTML = '<div class="album-loading-spinner"><div class="spinner"></div></div>';
-  if (thumbnailStrip) thumbnailStrip.innerHTML = '';
+  // Clear existing content
+  albumContentWrapper.innerHTML = '';
+  thumbnailStrip.innerHTML = '';
   
   // Get available photos
   let availablePhotos;
@@ -195,12 +194,9 @@ async function loadAlbumPhotos(albumName) {
   
   // Check if album has photos
   if (availablePhotos.length === 0) {
-    albumContent.innerHTML = '<div style="color: white; padding: 20px; text-align: center;">Will Create Another Memories 😜 </div>';
+    albumContentWrapper.innerHTML = '<div style="color: white; padding: 20px; text-align: center;">Will Create Another Memories 😜 </div>';
     return;
   }
-  
-  // Clear spinner and generate photo items
-  albumContent.innerHTML = '';
   
   availablePhotos.forEach((photoNum, index) => {
     const isFirst = index === 0;
