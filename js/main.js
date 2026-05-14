@@ -194,7 +194,7 @@ async function loadAlbumPhotos(albumName) {
   
   // Check if album has photos
   if (availablePhotos.length === 0) {
-    albumContentWrapper.innerHTML = '<div style="color: white; padding: 20px; text-align: center;">Will Create Another Memories 😜 </div>';
+    albumContentWrapper.innerHTML = '<div style="color: white; padding: 20px; text-align: center;">⁴⁰⁴ Error ⁴⁰⁴</div>';
     return;
   }
   
