@@ -1856,4 +1856,162 @@ body {
   }
 }
 
+/* ========================================
+   Synchronized Lyrics Display Styles
+   ======================================== */
+
+.lyrics-container {
+  position: fixed;
+  bottom: 120px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 90%;
+  max-width: 700px;
+  height: 200px;
+  overflow: hidden;
+  z-index: 1000;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 1s ease-in-out;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.lyrics-container.visible {
+  opacity: 1;
+}
+
+.lyrics-content {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.lyric-line {
+  position: absolute;
+  text-align: center;
+  font-family: 'Georgia', 'Times New Roman', serif;
+  line-height: 1.8;
+  padding: 8px 16px;
+  transition: all 1s ease-in-out;
+  white-space: nowrap;
+  letter-spacing: 2px;
+  font-style: italic;
+}
+
+/* Hidden state - fully transparent */
+.lyric-line.hidden {
+  opacity: 0;
+  transform: translateY(30px) scale(0.85);
+  filter: blur(6px) brightness(0.3);
+}
+
+/* Active state - fully visible and highlighted with nostalgic glow */
+.lyric-line.active {
+  opacity: 1;
+  transform: translateY(0) scale(1.05);
+  filter: blur(0) brightness(1.1);
+  color: #FFF5E6;
+  font-size: 26px;
+  font-weight: 500;
+  text-shadow: 
+    0 0 10px rgba(255, 218, 185, 0.9),
+    0 0 20px rgba(255, 200, 150, 0.7),
+    0 0 40px rgba(255, 180, 120, 0.5),
+    0 0 60px rgba(255, 160, 100, 0.3),
+    0 0 80px rgba(255, 140, 80, 0.2);
+  z-index: 10;
+  animation: nostalgicGlow 3s ease-in-out infinite alternate;
+}
+
+@keyframes nostalgicGlow {
+  0% {
+    text-shadow: 
+      0 0 10px rgba(255, 218, 185, 0.8),
+      0 0 20px rgba(255, 200, 150, 0.6),
+      0 0 40px rgba(255, 180, 120, 0.4),
+      0 0 60px rgba(255, 160, 100, 0.2);
+    filter: brightness(1.05);
+  }
+  100% {
+    text-shadow: 
+      0 0 15px rgba(255, 225, 200, 1),
+      0 0 30px rgba(255, 210, 160, 0.8),
+      0 0 50px rgba(255, 190, 130, 0.6),
+      0 0 70px rgba(255, 170, 110, 0.4),
+      0 0 90px rgba(255, 150, 90, 0.3);
+    filter: brightness(1.15);
+  }
+}
+
+/* Fading out state - nostalgic fade with golden hue */
+.lyric-line.fading {
+  opacity: 0.2;
+  transform: translateY(-25px) scale(0.9);
+  filter: blur(3px) brightness(0.5) sepia(0.3);
+  color: rgba(255, 230, 200, 0.3);
+  text-shadow: 0 0 5px rgba(255, 200, 150, 0.2);
+}
+
+/* Mobile adjustments */
+@media (max-width: 768px) {
+  .lyrics-container {
+    bottom: 100px;
+    height: 150px;
+    width: 95%;
+  }
+
+  .lyric-line.active {
+    font-size: 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .lyrics-container {
+    bottom: 80px;
+    height: 120px;
+  }
+
+  .lyric-line.active {
+    font-size: 16px;
+  }
+}
+
+/* Mobile adjustments */
+@media (max-width: 768px) {
+  .lyrics-container {
+    bottom: 100px;
+    height: 150px;
+    width: 95%;
+  }
+
+  .lyric-line {
+    font-size: 14px;
+  }
+
+  .lyric-line.active {
+    font-size: 18px;
+  }
+}
+
+@media (max-width: 480px) {
+  .lyrics-container {
+    bottom: 80px;
+    height: 120px;
+  }
+
+  .lyric-line {
+    font-size: 12px;
+  }
+
+  .lyric-line.active {
+    font-size: 16px;
+  }
+}
+
 /*# sourceMappingURL=style.css.map */

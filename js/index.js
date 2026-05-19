@@ -28,11 +28,17 @@ const flowerOverlay = document.getElementById('flowerOverlay');
 const flowerFrame = document.getElementById('flowerFrame');
 const heartSound = new Audio('music/sound.mp3');
 
+// Store the audio start time for lyrics sync
+let audioStartTime = 0;
+let audioStarted = false;
+
 openBtn.addEventListener('click', (e) => {
   e.preventDefault();
 
   // Play music immediately (inside user gesture - required for mobile)
   heartSound.play().catch(() => {});
+  audioStartTime = Date.now();
+  audioStarted = true;
 
   // Show flower in iframe (no navigation = music continues)
   flowerOverlay.style.display = 'block';
@@ -42,3 +48,19 @@ openBtn.addEventListener('click', (e) => {
   openBtn.closest('body').querySelector('.title').style.display = 'none';
   openBtn.closest('div').style.display = 'none';
 });
+
+// Listen for messages from iframe and send audio time
+window.addEventListener('message', (event) => {
+  if (event.data === 'getAudioTime' && audioStarted) {
+    const currentTime = (Date.now() - audioStartTime) / 1000;
+    flowerFrame.contentWindow.postMessage({ type: 'audioTime', time: currentTime }, '*');
+  }
+});
+
+// Send audio time updates to iframe periodically
+setInterval(() => {
+  if (audioStarted && flowerFrame.contentWindow) {
+    const currentTime = (Date.now() - audioStartTime) / 1000;
+    flowerFrame.contentWindow.postMessage({ type: 'audioTime', time: currentTime }, '*');
+  }
+}, 100);
