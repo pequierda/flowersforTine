@@ -1,3 +1,493 @@
+// ========================================
+// Enhanced Interactive Garden Experience
+// ========================================
+
+// Configuration
+const GARDEN_CONFIG = {
+    fireflyCount: 15,
+    petalCount: 20,
+    hiddenMessages: [
+        "You make my heart skip a beat 💓",
+        "Every day with you is a blessing 🌟",
+        "Your smile is my favorite sight 😊",
+        "I fall for you more each day 💕",
+        "You are my everything ❤️"
+    ],
+    finalLetter: `My Dearest Adii,
+
+From the moment you came into my life, everything changed. The world became brighter, more beautiful, and full of endless possibilities. 
+
+Your laughter is my favorite song, your smile is my greatest joy, and your love is my most treasured gift. 
+
+I created this garden of flowers for you - each bloom representing a moment we've shared, each petal a memory I hold dear. Just like these flowers, my love for you continues to grow and bloom, forever and always.
+
+Thank you for being you. Thank you for being mine.
+
+With all my love,
+Forever and Always ❤️`
+};
+
+// State
+let collectedMessages = 0;
+let totalMessages = GARDEN_CONFIG.hiddenMessages.length;
+let audioPlayer = null;
+let isPlaying = false;
+
+// DOM Elements
+const interactiveContainer = document.getElementById('interactiveContainer');
+const collectionCounter = document.getElementById('collectionCounter');
+const collectionCount = document.getElementById('collectionCount');
+const modalBackdrop = document.getElementById('modalBackdrop');
+const loveLetterModal = document.getElementById('loveLetterModal');
+const modalContent = document.getElementById('modalContent');
+const modalClose = document.getElementById('modalClose');
+
+// ========================================
+// Firefly System
+// ========================================
+
+function createFireflies() {
+    for (let i = 0; i < GARDEN_CONFIG.fireflyCount; i++) {
+        const firefly = document.createElement('div');
+        firefly.className = 'firefly';
+        firefly.style.left = Math.random() * 100 + '%';
+        firefly.style.top = Math.random() * 100 + '%';
+        firefly.style.animationDuration = (Math.random() * 5 + 5) + 's';
+        firefly.style.animationDelay = Math.random() * 5 + 's';
+        
+        // Random size
+        const size = Math.random() * 3 + 2;
+        firefly.style.width = size + 'px';
+        firefly.style.height = size + 'px';
+        
+        // Click handler
+        firefly.addEventListener('click', () => collectFirefly(firefly));
+        
+        interactiveContainer.appendChild(firefly);
+    }
+}
+
+function collectFirefly(firefly) {
+    firefly.classList.add('clicked');
+    playCollectSound();
+    
+    // Show a hidden message
+    setTimeout(() => {
+        firefly.remove();
+        showHiddenMessage();
+    }, 500);
+}
+
+// ========================================
+// Falling Petals System
+// ========================================
+
+function createFallingPetals() {
+    for (let i = 0; i < GARDEN_CONFIG.petalCount; i++) {
+        setTimeout(() => {
+            const petal = document.createElement('div');
+            petal.className = 'falling-petal';
+            petal.style.left = Math.random() * 100 + '%';
+            petal.style.animationDuration = (Math.random() * 10 + 10) + 's';
+            petal.style.animationDelay = '0s';
+            
+            // Random size
+            const size = Math.random() * 10 + 10;
+            petal.style.width = size + 'px';
+            petal.style.height = size + 'px';
+            
+            // Random rotation
+            petal.style.transform = `rotate(${Math.random() * 360}deg)`;
+            
+            interactiveContainer.appendChild(petal);
+            
+            // Remove after animation
+            setTimeout(() => {
+                petal.remove();
+            }, 20000);
+        }, i * 500);
+    }
+    
+    // Continuously create new petals
+    setInterval(() => {
+        const petal = document.createElement('div');
+        petal.className = 'falling-petal';
+        petal.style.left = Math.random() * 100 + '%';
+        petal.style.animationDuration = (Math.random() * 10 + 10) + 's';
+        
+        const size = Math.random() * 10 + 10;
+        petal.style.width = size + 'px';
+        petal.style.height = size + 'px';
+        
+        interactiveContainer.appendChild(petal);
+        
+        setTimeout(() => {
+            petal.remove();
+        }, 20000);
+    }, 2000);
+}
+
+// ========================================
+// Hidden Messages System
+// ========================================
+
+function showHiddenMessage() {
+    if (collectedMessages >= totalMessages) return;
+    
+    const message = document.createElement('div');
+    message.className = 'hidden-message';
+    message.textContent = GARDEN_CONFIG.hiddenMessages[collectedMessages];
+    
+    // Random position (avoiding edges)
+    const x = Math.random() * 70 + 15;
+    const y = Math.random() * 60 + 20;
+    message.style.left = x + '%';
+    message.style.top = y + '%';
+    
+    // Click handler
+    message.addEventListener('click', () => collectMessage(message));
+    
+    interactiveContainer.appendChild(message);
+    
+    // Animate in
+    setTimeout(() => {
+        message.classList.add('visible');
+    }, 100);
+    
+    collectedMessages++;
+    updateCollectionCounter();
+    
+    // Check if all messages collected
+    if (collectedMessages >= totalMessages) {
+        setTimeout(() => {
+            showFinalLetter();
+        }, 1500);
+    }
+}
+
+function collectMessage(message) {
+    message.classList.add('clicked');
+    playCollectSound();
+    
+    setTimeout(() => {
+        message.remove();
+        
+        // Show next message after a delay
+        if (collectedMessages < totalMessages) {
+            setTimeout(() => showHiddenMessage(), 2000);
+        }
+    }, 500);
+}
+
+function updateCollectionCounter() {
+    collectionCount.textContent = collectedMessages;
+    
+    if (collectedMessages === 1) {
+        collectionCounter.classList.add('visible');
+    }
+}
+
+// ========================================
+// Final Love Letter
+// ========================================
+
+function showFinalLetter() {
+    // Show backdrop
+    modalBackdrop.classList.add('visible');
+    
+    // Type out the letter content
+    modalContent.innerHTML = '';
+    typeWriter(GARDEN_CONFIG.finalLetter, modalContent, 30);
+    
+    // Show modal
+    setTimeout(() => {
+        loveLetterModal.classList.add('visible');
+        playMagicSound();
+    }, 500);
+}
+
+function typeWriter(text, element, speed) {
+    let i = 0;
+    const cursor = document.createElement('span');
+    cursor.className = 'typing-cursor';
+    cursor.textContent = '|';
+    cursor.style.animation = 'blink 0.5s step-end infinite';
+    
+    element.appendChild(cursor);
+    
+    function type() {
+        if (i < text.length) {
+            const char = text.charAt(i);
+            if (char === '\n') {
+                element.insertBefore(document.createElement('br'), cursor);
+            } else {
+                element.insertBefore(document.createTextNode(char), cursor);
+            }
+            i++;
+            setTimeout(type, speed);
+        } else {
+            cursor.remove();
+        }
+    }
+    
+    type();
+}
+
+function closeModal() {
+    loveLetterModal.classList.remove('visible');
+    modalBackdrop.classList.remove('visible');
+}
+
+// ========================================
+// Cursor Trail Effect
+// ========================================
+
+function initCursorTrail() {
+    let lastX = 0, lastY = 0;
+    let trailInterval;
+    
+    document.addEventListener('mousemove', (e) => {
+        const x = e.clientX;
+        const y = e.clientY;
+        
+        // Only create trail on significant movement
+        const distance = Math.sqrt(Math.pow(x - lastX, 2) + Math.pow(y - lastY, 2));
+        
+        if (distance > 10) {
+            createCursorTrail(x, y);
+            lastX = x;
+            lastY = y;
+        }
+    });
+}
+
+function createCursorTrail(x, y) {
+    const trail = document.createElement('div');
+    trail.className = 'cursor-trail';
+    trail.style.left = x + 'px';
+    trail.style.top = y + 'px';
+    
+    // Random color from palette
+    const colors = ['rgba(255, 107, 157, 0.6)', 'rgba(255, 154, 158, 0.6)', 'rgba(254, 207, 239, 0.6)', 'rgba(255, 255, 255, 0.6)'];
+    trail.style.background = `radial-gradient(circle, ${colors[Math.floor(Math.random() * colors.length)]} 0%, transparent 70%)`;
+    
+    document.body.appendChild(trail);
+    
+    setTimeout(() => {
+        trail.remove();
+    }, 500);
+}
+
+// ========================================
+// Sound Effects
+// ========================================
+
+const AudioContext = window.AudioContext || window.webkitAudioContext;
+let audioContext;
+
+function initAudioContext() {
+    if (!audioContext) {
+        audioContext = new AudioContext();
+    }
+}
+
+function playCollectSound() {
+    initAudioContext();
+    const oscillator = audioContext.createOscillator();
+    const gainNode = audioContext.createGain();
+    
+    oscillator.connect(gainNode);
+    gainNode.connect(audioContext.destination);
+    
+    oscillator.frequency.value = 880;
+    oscillator.type = 'sine';
+    
+    gainNode.gain.setValueAtTime(0.1, audioContext.currentTime);
+    gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.3);
+    
+    oscillator.start(audioContext.currentTime);
+    oscillator.stop(audioContext.currentTime + 0.3);
+}
+
+function playMagicSound() {
+    initAudioContext();
+    const oscillator = audioContext.createOscillator();
+    const gainNode = audioContext.createGain();
+    
+    oscillator.connect(gainNode);
+    gainNode.connect(audioContext.destination);
+    
+    oscillator.frequency.value = 523.25; // C5
+    oscillator.type = 'sine';
+    
+    gainNode.gain.setValueAtTime(0.1, audioContext.currentTime);
+    gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.5);
+    
+    oscillator.start(audioContext.currentTime);
+    oscillator.stop(audioContext.currentTime + 0.5);
+}
+
+// ========================================
+// Music Beat Synchronization
+// ========================================
+
+function syncFlowersToMusic() {
+    // Request audio time from parent
+    window.parent.postMessage('getAudioTime', '*');
+    
+    // Listen for audio time updates
+    window.addEventListener('message', (event) => {
+        if (event.data && event.data.type === 'audioTime') {
+            const time = event.data.time;
+            
+            // Pulse flowers on beat (assuming ~120 BPM = 0.5s per beat)
+            const beat = Math.floor(time * 2) % 2;
+            
+            if (beat === 0) {
+                document.querySelectorAll('.flower').forEach(flower => {
+                    flower.style.filter = 'brightness(1.1)';
+                    setTimeout(() => {
+                        flower.style.filter = '';
+                    }, 100);
+                });
+            }
+        }
+    });
+}
+
+// ========================================
+// Photo Album Enhancements
+// ========================================
+
+// Enhanced photo captions
+const photoCaptions = {
+    album1: [
+        "Our first adventure together 🌟",
+        "That beautiful smile of yours 😊",
+        "Memories that last forever 💕"
+    ],
+    album2: [
+        "Dancing under the stars ✨",
+        "Your laughter is contagious 😄",
+        "Every moment is precious 💝"
+    ],
+    album3: [
+        "Lost in your eyes 👀",
+        "My heart belongs to you ❤️",
+        "Together forever 🌹"
+    ],
+    album4: [
+        "You are my sunshine ☀️",
+        "My everything 💖",
+        "Love you always 💕"
+    ]
+};
+
+// Override the openPhoto function to add captions
+const originalOpenPhoto = window.openPhoto;
+window.openPhoto = function(albumName, photoNum, ext) {
+    if (originalOpenPhoto) {
+        originalOpenPhoto(albumName, photoNum, ext);
+    }
+    
+    // Add caption to modal if exists
+    const captions = photoCaptions[albumName];
+    if (captions) {
+        const captionIndex = (photoNum - 1) % captions.length;
+        const caption = captions[captionIndex];
+        
+        // You could enhance the modal to show captions
+        console.log('Photo caption:', caption);
+    }
+};
+
+// ========================================
+// Initialization
+// ========================================
+
+onload = () => {
+    // Original initialization
+    initLyricsSystem();
+    
+    // Play music when arriving from heart click (index.html)
+    if (sessionStorage.getItem('playFlowerMusic') === 'true') {
+        sessionStorage.removeItem('playFlowerMusic');
+        const flowerMusic = new Audio('music/sound.mp3');
+        flowerMusic.play().catch(() => {});
+    }
+    
+    const c = setTimeout(() => {
+        document.body.classList.remove("not-loaded");
+        
+        const titles = ('❤️❤️❤️').split('')
+        const titleElement = document.getElementById('title');
+        let index = 0;
+        
+        function appendTitle() {
+            if (index < titles.length) {
+                titleElement.innerHTML += titles[index];
+                index++;
+                setTimeout(appendTitle, 300);
+            }
+        }
+        
+        appendTitle();
+        
+        clearTimeout(c);
+    }, 1000);
+    
+    // Show album menu after delay
+    setTimeout(() => {
+        const albumContainer = document.querySelector('.album-menu-container');
+        if (albumContainer) {
+            albumContainer.classList.add('visible');
+            loadAlbumPhotos('album1').then(() => {
+                startAutoAdvance();
+            });
+        }
+    }, 3000);
+    
+    // Enhanced features initialization
+    setTimeout(() => {
+        // Create fireflies
+        createFireflies();
+        
+        // Create falling petals
+        createFallingPetals();
+        
+        // Initialize cursor trail
+        initCursorTrail();
+        
+        // Start music synchronization
+        syncFlowersToMusic();
+        
+        // Show first hidden message after a delay
+        setTimeout(() => {
+            showHiddenMessage();
+        }, 8000);
+        
+    }, 5000);
+    
+    // Modal close handlers
+    if (modalClose) {
+        modalClose.addEventListener('click', closeModal);
+    }
+    
+    if (modalBackdrop) {
+        modalBackdrop.addEventListener('click', closeModal);
+    }
+    
+    // Escape key to close modal
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+            closeModal();
+        }
+    });
+};
+
+// ========================================
+// Original Carousel and Album Code
+// ========================================
 
 // Carousel state
 let currentSlideIndex = 0;
@@ -7,661 +497,470 @@ let autoSlideInterval;
 
 // Initialize carousel
 function initCarousel() {
-  if (slides.length === 0) return;
-  showSlide(currentSlideIndex);
-  startAutoSlide();
+    if (slides.length === 0) return;
+    showSlide(currentSlideIndex);
+    startAutoSlide();
 }
 
 // Show specific slide
 function showSlide(index) {
-  slides.forEach((slide, i) => {
-    slide.classList.remove('active');
-    if (dots[i]) dots[i].classList.remove('active');
-  });
-
-  currentSlideIndex = index;
-  if (slides[currentSlideIndex]) {
-    slides[currentSlideIndex].classList.add('active');
-  }
-  if (dots[currentSlideIndex]) {
-    dots[currentSlideIndex].classList.add('active');
-  }
+    slides.forEach((slide, i) => {
+        slide.classList.remove('active');
+        if (dots[i]) dots[i].classList.remove('active');
+    });
+    
+    currentSlideIndex = index;
+    if (slides[currentSlideIndex]) {
+        slides[currentSlideIndex].classList.add('active');
+    }
+    if (dots[currentSlideIndex]) {
+        dots[currentSlideIndex].classList.add('active');
+    }
 }
 
 // Next slide
 function nextSlide() {
-  let nextIndex = currentSlideIndex + 1;
-  if (nextIndex >= slides.length) {
-    nextIndex = 0;
-  }
-  showSlide(nextIndex);
-  resetAutoSlide();
+    let nextIndex = currentSlideIndex + 1;
+    if (nextIndex >= slides.length) {
+        nextIndex = 0;
+    }
+    showSlide(nextIndex);
+    resetAutoSlide();
 }
 
 // Previous slide
 function prevSlide() {
-  let prevIndex = currentSlideIndex - 1;
-  if (prevIndex < 0) {
-    prevIndex = slides.length - 1;
-  }
-  showSlide(prevIndex);
-  resetAutoSlide();
+    let prevIndex = currentSlideIndex - 1;
+    if (prevIndex < 0) {
+        prevIndex = slides.length - 1;
+    }
+    showSlide(prevIndex);
+    resetAutoSlide();
 }
 
 // Go to specific slide
 function currentSlide(index) {
-  showSlide(index - 1);
-  resetAutoSlide();
+    showSlide(index - 1);
+    resetAutoSlide();
 }
 
 // Auto-advance slides
 function startAutoSlide() {
-  autoSlideInterval = setInterval(() => {
-    nextSlide();
-  }, 4000); // Change slide every 4 seconds
+    autoSlideInterval = setInterval(() => {
+        nextSlide();
+    }, 4000);
 }
 
 // Reset auto-slide timer
 function resetAutoSlide() {
-  clearInterval(autoSlideInterval);
-  startAutoSlide();
+    clearInterval(autoSlideInterval);
+    startAutoSlide();
 }
 
 // Album data configuration
-const MAX_PHOTOS_PER_ALBUM = 10; // Limit each album to 10 photos
+const MAX_PHOTOS_PER_ALBUM = 10;
 
 const albums = {
-  album1: {
-    name: 'Album 1',
-    icon: '📸',
-    start: 1,
-    count: 0  // 0 = auto-detect (max 10)
-  },
-  album2: {
-    name: 'Album 2',
-    icon: '🌸',
-    start: 1,
-    count: 0  // 0 = auto-detect (max 10)
-  },
-  album3: {
-    name: 'Album 3',
-    icon: '💕',
-    start: 1,
-    count: 0  // 0 = auto-detect (max 10)
-  },
-   album4: {
-    name: 'Album 4',
-    icon: '💕',
-    start: 1,
-    count: 0  // 0 = auto-detect (max 10)
-  }
+    album1: {
+        name: 'Album 1',
+        icon: '📸',
+        start: 1,
+        count: 0
+    },
+    album2: {
+        name: 'Album 2',
+        icon: '🌸',
+        start: 1,
+        count: 0
+    },
+    album3: {
+        name: 'Album 3',
+        icon: '💕',
+        start: 1,
+        count: 0
+    },
+    album4: {
+        name: 'Album 4',
+        icon: '💕',
+        start: 1,
+        count: 0
+    }
 };
 
-// Scan album to detect available photos (max 10) - supports both .jpg and .gif
+// Scan album to detect available photos
 async function scanAlbumPhotos(albumName) {
-  const album = albums[albumName];
-  const startNum = album.start;
-  
-  // Create an array to track which photos exist with their extension
-  const existingPhotos = [];
-  
-  // Check up to MAX_PHOTOS_PER_ALBUM photos
-  for (let i = 0; i < MAX_PHOTOS_PER_ALBUM; i++) {
-    const photoNum = startNum + i;
-    let found = false;
+    const album = albums[albumName];
+    const startNum = album.start;
     
-    // Check for .jpg first, then .gif
-    const extensions = ['.jpg', '.gif'];
-    for (const ext of extensions) {
-      const photoUrl = `images/${albumName}/${photoNum}${ext}`;
-      
-      try {
-        // Try to fetch the image header (don't load full image)
-        const response = await fetch(photoUrl, { method: 'HEAD' });
-        if (response.ok) {
-          existingPhotos.push({ num: photoNum, ext: ext });
-          found = true;
-          break; // Found this photo, move to next number
+    const existingPhotos = [];
+    
+    for (let i = 0; i < MAX_PHOTOS_PER_ALBUM; i++) {
+        const photoNum = startNum + i;
+        let found = false;
+        
+        const extensions = ['.jpg', '.gif'];
+        for (const ext of extensions) {
+            const photoUrl = `images/${albumName}/${photoNum}${ext}`;
+            
+            try {
+                const response = await fetch(photoUrl, { method: 'HEAD' });
+                if (response.ok) {
+                    existingPhotos.push({ num: photoNum, ext: ext });
+                    found = true;
+                    break;
+                }
+            } catch (error) {
+                continue;
+            }
         }
-      } catch (error) {
-        // Try next extension
-        continue;
-      }
+        
+        if (!found) {
+            break;
+        }
     }
     
-    // If neither extension found, assume no more sequential photos
-    if (!found) {
-      break;
-    }
-  }
-  
-  return existingPhotos;
+    return existingPhotos;
 }
 
 let currentAlbum = 'album1';
 let autoAdvanceInterval = null;
-const AUTO_ADVANCE_DELAY = 3000; // 3 seconds
+const AUTO_ADVANCE_DELAY = 3000;
 
-// Start auto-advance
 function startAutoAdvance() {
-  stopAutoAdvance(); // Clear any existing interval
-  autoAdvanceInterval = setInterval(() => {
-    // Only advance if no photo is enlarged
-    const isEnlarged = document.querySelector('.photo-item.enlarged');
-    if (!isEnlarged) {
-      scrollAlbum('right');
-    }
-  }, AUTO_ADVANCE_DELAY);
+    stopAutoAdvance();
+    autoAdvanceInterval = setInterval(() => {
+        const isEnlarged = document.querySelector('.photo-item.enlarged');
+        if (!isEnlarged) {
+            scrollAlbum('right');
+        }
+    }, AUTO_ADVANCE_DELAY);
 }
 
-// Stop auto-advance
 function stopAutoAdvance() {
-  if (autoAdvanceInterval) {
-    clearInterval(autoAdvanceInterval);
-    autoAdvanceInterval = null;
-  }
+    if (autoAdvanceInterval) {
+        clearInterval(autoAdvanceInterval);
+        autoAdvanceInterval = null;
+    }
 }
 
-// Show album photos
 function showAlbum(albumName) {
-  currentAlbum = albumName;
-  
-  // Update active category button
-  document.querySelectorAll('.album-category').forEach(btn => {
-    btn.classList.remove('active');
-  });
-  event.currentTarget.classList.add('active');
-  
-  // Load photos for the selected album
-  loadAlbumPhotos(albumName);
-  
-  // Restart auto-advance
-  startAutoAdvance();
+    currentAlbum = albumName;
+    
+    document.querySelectorAll('.album-category').forEach(btn => {
+        btn.classList.remove('active');
+    });
+    event.currentTarget.classList.add('active');
+    
+    loadAlbumPhotos(albumName);
+    
+    startAutoAdvance();
 }
 
-// Load album photos with auto-detection
 async function loadAlbumPhotos(albumName) {
-  const albumContentWrapper = document.getElementById('album-content-wrapper');
-  const thumbnailStrip = document.getElementById('thumbnail-strip');
-  const album = albums[albumName];
-  
-  // Clear existing content
-  albumContentWrapper.innerHTML = '';
-  thumbnailStrip.innerHTML = '';
-  
-  // Get available photos
-  let availablePhotos;
-  if (album.count > 0) {
-    // Use manual count
-    availablePhotos = [];
-    for (let i = 0; i < album.count; i++) {
-      availablePhotos.push(album.start + i);
-    }
-  } else {
-    // Auto-detect photos
-    availablePhotos = await scanAlbumPhotos(albumName);
-  }
-  
-  // Check if album has photos
-  if (availablePhotos.length === 0) {
-    albumContentWrapper.innerHTML = '<div style="color: white; padding: 20px; text-align: center;">🚧⏳🔄🔜</div>';
-    return;
-  }
-  
-  availablePhotos.forEach((photoInfo, index) => {
-    const photoNum = photoInfo.num;
-    const ext = photoInfo.ext;
-    const isFirst = index === 0;
-    const photoSrc = `images/${albumName}/${photoNum}${ext}`;
+    const albumContentWrapper = document.getElementById('album-content-wrapper');
+    const thumbnailStrip = document.getElementById('thumbnail-strip');
+    const album = albums[albumName];
     
-    // Main photo display
-    const photoItem = document.createElement('div');
-    photoItem.className = 'photo-item' + (isFirst ? ' active' : '');
-    photoItem.innerHTML = `<img src="${photoSrc}" alt="Photo ${photoNum}">`;
-    photoItem.onclick = () => openPhoto(albumName, photoNum, ext);
-    albumContentWrapper.appendChild(photoItem);
+    albumContentWrapper.innerHTML = '';
+    thumbnailStrip.innerHTML = '';
     
-    // Thumbnail
-    const thumb = document.createElement('div');
-    thumb.className = 'thumb' + (isFirst ? ' active' : '');
-    thumb.innerHTML = `<img src="${photoSrc}" alt="Thumb ${photoNum}">`;
-    thumb.onclick = () => {
-      document.querySelectorAll('.thumb').forEach(t => t.classList.remove('active'));
-      thumb.classList.add('active');
-      // Find and set this photo as active in carousel
-      const allPhotos = document.querySelectorAll('.album-content .photo-item');
-      allPhotos.forEach(p => p.classList.remove('active'));
-      const targetPhoto = Array.from(allPhotos).find(p => 
-        p.querySelector('img').src.includes(`${photoNum}${ext}`)
-      );
-      if (targetPhoto) {
-        targetPhoto.classList.add('active');
-        updateCarouselPositions();
-      }
-    };
-    thumbnailStrip.appendChild(thumb);
-  });
-  
-  // Initialize 3D carousel positions
-  setTimeout(updateCarouselPositions, 50);
-}
-
-// Scroll to specific photo
-function scrollToPhoto(index) {
-  const albumContent = document.getElementById('album-content');
-  const photoItems = albumContent.querySelectorAll('.photo-item');
-  if (photoItems[index - 1]) {
-    photoItems[index - 1].scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
-  }
-}
-
-// Update photo positions for 3D carousel effect
-function updateCarouselPositions() {
-  const photoItems = document.querySelectorAll('.album-content .photo-item');
-  const totalPhotos = photoItems.length;
-  
-  if (totalPhotos === 0) return;
-  
-  // Find current active index
-  let currentIndex = 0;
-  photoItems.forEach((item, index) => {
-    if (item.classList.contains('active')) {
-      currentIndex = index;
-    }
-  });
-  
-  // Update each photo's position class
-  photoItems.forEach((item, index) => {
-    // Remove all position classes
-    item.classList.remove('active', 'prev', 'next', 'hidden');
-    
-    // Calculate relative position
-    const offset = (index - currentIndex + totalPhotos) % totalPhotos;
-    
-    if (offset === 0) {
-      item.classList.add('active');
-    } else if (offset === 1) {
-      item.classList.add('next');
-    } else if (offset === totalPhotos - 1) {
-      item.classList.add('prev');
+    let availablePhotos;
+    if (album.count > 0) {
+        availablePhotos = [];
+        for (let i = 0; i < album.count; i++) {
+            availablePhotos.push(album.start + i);
+        }
     } else {
-      item.classList.add('hidden');
+        availablePhotos = await scanAlbumPhotos(albumName);
     }
-  });
+    
+    if (availablePhotos.length === 0) {
+        albumContentWrapper.innerHTML = '<div style="color: white; padding: 20px; text-align: center;">🚧⏳🔄🔜</div>';
+        return;
+    }
+    
+    availablePhotos.forEach((photoInfo, index) => {
+        const photoNum = photoInfo.num;
+        const ext = photoInfo.ext;
+        const isFirst = index === 0;
+        const photoSrc = `images/${albumName}/${photoNum}${ext}`;
+        
+        const photoItem = document.createElement('div');
+        photoItem.className = 'photo-item' + (isFirst ? ' active' : '');
+        photoItem.innerHTML = `<img src="${photoSrc}" alt="Photo ${photoNum}">`;
+        photoItem.onclick = () => openPhoto(albumName, photoNum, ext);
+        albumContentWrapper.appendChild(photoItem);
+        
+        const thumb = document.createElement('div');
+        thumb.className = 'thumb' + (isFirst ? ' active' : '');
+        thumb.innerHTML = `<img src="${photoSrc}" alt="Thumb ${photoNum}">`;
+        thumb.onclick = () => {
+            document.querySelectorAll('.thumb').forEach(t => t.classList.remove('active'));
+            thumb.classList.add('active');
+            const allPhotos = document.querySelectorAll('.album-content .photo-item');
+            allPhotos.forEach(p => p.classList.remove('active'));
+            const targetPhoto = Array.from(allPhotos).find(p => 
+                p.querySelector('img').src.includes(`${photoNum}${ext}`)
+            );
+            if (targetPhoto) {
+                targetPhoto.classList.add('active');
+                updateCarouselPositions();
+            }
+        };
+        thumbnailStrip.appendChild(thumb);
+    });
+    
+    setTimeout(updateCarouselPositions, 50);
 }
 
-// Scroll album left/right with looping
+function scrollToPhoto(index) {
+    const albumContent = document.getElementById('album-content');
+    const photoItems = albumContent.querySelectorAll('.photo-item');
+    if (photoItems[index - 1]) {
+        photoItems[index - 1].scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+    }
+}
+
+function updateCarouselPositions() {
+    const photoItems = document.querySelectorAll('.album-content .photo-item');
+    const totalPhotos = photoItems.length;
+    
+    if (totalPhotos === 0) return;
+    
+    let currentIndex = 0;
+    photoItems.forEach((item, index) => {
+        if (item.classList.contains('active')) {
+            currentIndex = index;
+        }
+    });
+    
+    photoItems.forEach((item, index) => {
+        item.classList.remove('active', 'prev', 'next', 'hidden');
+        
+        const offset = (index - currentIndex + totalPhotos) % totalPhotos;
+        
+        if (offset === 0) {
+            item.classList.add('active');
+        } else if (offset === 1) {
+            item.classList.add('next');
+        } else if (offset === totalPhotos - 1) {
+            item.classList.add('prev');
+        } else {
+            item.classList.add('hidden');
+        }
+    });
+}
+
 function scrollAlbum(direction) {
-  const photoItems = document.querySelectorAll('.album-content .photo-item');
-  const totalPhotos = photoItems.length;
-  
-  if (totalPhotos === 0) return;
-  
-  // Find current active index
-  let currentIndex = 0;
-  photoItems.forEach((item, index) => {
-    if (item.classList.contains('active')) {
-      currentIndex = index;
+    const photoItems = document.querySelectorAll('.album-content .photo-item');
+    const totalPhotos = photoItems.length;
+    
+    if (totalPhotos === 0) return;
+    
+    let currentIndex = 0;
+    photoItems.forEach((item, index) => {
+        if (item.classList.contains('active')) {
+            currentIndex = index;
+        }
+    });
+    
+    let newIndex;
+    if (direction === 'right') {
+        newIndex = (currentIndex + 1) % totalPhotos;
+    } else {
+        newIndex = (currentIndex - 1 + totalPhotos) % totalPhotos;
     }
-  });
-  
-  // Calculate new index with looping
-  let newIndex;
-  if (direction === 'right') {
-    newIndex = (currentIndex + 1) % totalPhotos;
-  } else {
-    newIndex = (currentIndex - 1 + totalPhotos) % totalPhotos;
-  }
-  
-  // Update active states
-  photoItems.forEach((item, index) => {
-    item.classList.toggle('active', index === newIndex);
-  });
-  
-  // Update thumbnail active states
-  const thumbs = document.querySelectorAll('.thumbnail-strip .thumb');
-  thumbs.forEach((thumb, index) => {
-    thumb.classList.toggle('active', index === newIndex);
-  });
-  
-  // Update carousel positions for 3D effect
-  updateCarouselPositions();
+    
+    photoItems.forEach((item, index) => {
+        item.classList.toggle('active', index === newIndex);
+    });
+    
+    const thumbs = document.querySelectorAll('.thumbnail-strip .thumb');
+    thumbs.forEach((thumb, index) => {
+        thumb.classList.toggle('active', index === newIndex);
+    });
+    
+    updateCarouselPositions();
 }
 
-// Create and show photo modal
 function showPhotoModal(imageSrc) {
-  // Close any existing modal first
-  closePhotoModal();
-  
-  // Create modal elements
-  const modal = document.createElement('div');
-  modal.className = 'photo-modal';
-  modal.id = 'photo-modal';
-  
-  const backdrop = document.createElement('div');
-  backdrop.className = 'photo-modal-backdrop';
-  backdrop.onclick = closePhotoModal;
-  
-  const content = document.createElement('div');
-  content.className = 'photo-modal-content';
-  
-  const img = document.createElement('img');
-  img.src = imageSrc;
-  img.alt = 'Enlarged photo';
-  
-  const closeBtn = document.createElement('button');
-  closeBtn.className = 'photo-modal-close';
-  closeBtn.innerHTML = '×';
-  closeBtn.onclick = closePhotoModal;
-  
-  content.appendChild(img);
-  content.appendChild(closeBtn);
-  modal.appendChild(backdrop);
-  modal.appendChild(content);
-  document.body.appendChild(modal);
-  
-  // Trigger animation
-  requestAnimationFrame(() => {
-    modal.classList.add('active');
-  });
-  
-  // Disable nav buttons
-  const navButtons = document.querySelectorAll('.album-nav');
-  navButtons.forEach(btn => btn.classList.add('disabled'));
-  
-  // Pause auto-advance
-  stopAutoAdvance();
+    closePhotoModal();
+    
+    const modal = document.createElement('div');
+    modal.className = 'photo-modal';
+    modal.id = 'photo-modal';
+    
+    const backdrop = document.createElement('div');
+    backdrop.className = 'photo-modal-backdrop';
+    backdrop.onclick = closePhotoModal;
+    
+    const content = document.createElement('div');
+    content.className = 'photo-modal-content';
+    
+    const img = document.createElement('img');
+    img.src = imageSrc;
+    img.alt = 'Enlarged photo';
+    
+    const closeBtn = document.createElement('button');
+    closeBtn.className = 'photo-modal-close';
+    closeBtn.innerHTML = '×';
+    closeBtn.onclick = closePhotoModal;
+    
+    content.appendChild(img);
+    content.appendChild(closeBtn);
+    modal.appendChild(backdrop);
+    modal.appendChild(content);
+    document.body.appendChild(modal);
+    
+    requestAnimationFrame(() => {
+        modal.classList.add('active');
+    });
+    
+    const navButtons = document.querySelectorAll('.album-nav');
+    navButtons.forEach(btn => btn.classList.add('disabled'));
+    
+    stopAutoAdvance();
 }
 
-// Close photo modal
 function closePhotoModal() {
-  const modal = document.getElementById('photo-modal');
-  if (modal) {
-    modal.classList.remove('active');
-    setTimeout(() => {
-      modal.remove();
-    }, 300);
-  }
-  
-  // Enable nav buttons
-  const navButtons = document.querySelectorAll('.album-nav');
-  navButtons.forEach(btn => btn.classList.remove('disabled'));
-  
-  // Resume auto-advance
-  startAutoAdvance();
+    const modal = document.getElementById('photo-modal');
+    if (modal) {
+        modal.classList.remove('active');
+        setTimeout(() => {
+            modal.remove();
+        }, 300);
+    }
+    
+    const navButtons = document.querySelectorAll('.album-nav');
+    navButtons.forEach(btn => btn.classList.remove('disabled'));
+    
+    startAutoAdvance();
 }
 
-// Open photo in modal view
 function openPhoto(albumName, photoNum, ext = '.jpg') {
-  const imageSrc = `images/${albumName}/${photoNum}${ext}`;
-  showPhotoModal(imageSrc);
+    const imageSrc = `images/${albumName}/${photoNum}${ext}`;
+    showPhotoModal(imageSrc);
 }
 
 // ========================================
 // Synchronized Lyrics System
 // ========================================
 
-// Lyrics data with timestamps (time in seconds)
-// IMPORTANT: You need to customize these timestamps to match your song!
-// Listen to your song and note when each line starts
 const lyricsData = [
-  { time: 0, text: " " },
-//   { time: 21, text: "Your morning eyes," },
-//   { time: 24, text: "I could stare like watching stars" },
-//   { time: 29, text: "I could walk you by," },
-
-//   { time: 32, text: "and I'll tell without a thought" },
-
-//   { time: 36, text: "You'd be mine," },
-
-//   { time: 38, text: "would you mind " },
-
-//   { time: 40, text: "if I took your hand tonight?" },
-
-//   { time: 44, text: "Know you're all" },
-
-//   { time: 46, text: "that I want" },
-
-//   { time: 49, text: "this life" },
-
-//   { time: 53, text: "I'll imagine we fell in love" },
-
-//   { time: 56, text: "I'll nap under moonlight skies with you" },
-  
-//   { time: 60, text: "I think I'll picture us," },
-
-//   { time: 63, text: "you with the waves" },
-
-//   { time: 65, text: "The ocean's colors on your face" },
-
-//   { time: 69, text: "I'll leave my heart with your air" },
-
-//   { time: 73, text: "So let me fly with you" },
-
-//   { time: 77, text: "Will you be forever with me?" },
-
-//   { time: 83, text: " " },
-
-//   { time: 118, text: "My love will always stay by you" },
-
-//   { time: 125, text: "I'll keep it safe," },
-
-//   { time: 128, text: "so don't you worry a thing" },
-
-//   { time: 131, text: "I'll tell you I love you more" },
-    
-//   { time: 135, text: "It's stuck with you forever," },
-
-//   { time: 139, text: "so promise you won't let it go" },
-
-//   { time: 143, text: "I'll trust the universe" },
-
-//   { time: 146, text: "will always bring me to you" },
-
-//   { time: 152, text: "I'll imagine we fell in love" },
-
-//    { time: 155, text: "I'll nap under moonlight skies with you" },
-  
-//   { time: 159, text: "I think I'll picture us," },
-
-//   { time: 161, text: "you with the waves" },
-
-//   { time: 163, text: "The ocean's colors on your face" },
-
-//   { time: 167, text: "I'll leave my heart with your air" },
-
-//   { time: 172, text: "So let me fly with you" },
-
-//   { time: 176, text: "Will you be forever with me?" },
-
-//  { time: 183, text: " " }
-
-
-
-
-
+    { time: 0, text: " " }
 ];
 
-// Lyrics state
 let currentLyricIndex = -1;
 let lyricsVisible = true;
 let lyricsEnabled = true;
-let audioPlayer = null;
 let syncInterval = null;
 let currentTime = 0;
-let isPlaying = false;
 
-// Initialize lyrics system
 function initLyricsSystem() {
-  // Try to get audio from the page's audio element first
-  audioPlayer = document.getElementById('audioPlayer');
-  
-  // Render initial lyrics
-  renderLyrics();
-  
-  // Show lyrics container (always visible)
-  setTimeout(() => {
-    const container = document.getElementById('lyricsContainer');
-    if (container) container.classList.add('visible');
-  }, 500);
-
-  // Listen for audio time updates from parent window
-  window.addEventListener('message', (event) => {
-    if (event.data && event.data.type === 'audioTime') {
-      currentTime = event.data.time;
-      isPlaying = true;
-      syncLyrics(currentTime);
-    }
-  });
-
-  // If audio element exists, set up event listeners
-  if (audioPlayer) {
-    audioPlayer.addEventListener('play', startLyricsSync);
-    audioPlayer.addEventListener('pause', stopLyricsSync);
-    audioPlayer.addEventListener('ended', () => {
-      stopLyricsSync();
-      resetLyrics();
+    audioPlayer = document.getElementById('audioPlayer');
+    
+    renderLyrics();
+    
+    setTimeout(() => {
+        const container = document.getElementById('lyricsContainer');
+        if (container) container.classList.add('visible');
+    }, 500);
+    
+    window.addEventListener('message', (event) => {
+        if (event.data && event.data.type === 'audioTime') {
+            currentTime = event.data.time;
+            isPlaying = true;
+            syncLyrics(currentTime);
+        }
     });
-    audioPlayer.addEventListener('seeked', updateLyricsPosition);
-  }
+    
+    if (audioPlayer) {
+        audioPlayer.addEventListener('play', startLyricsSync);
+        audioPlayer.addEventListener('pause', stopLyricsSync);
+        audioPlayer.addEventListener('ended', () => {
+            stopLyricsSync();
+            resetLyrics();
+        });
+        audioPlayer.addEventListener('seeked', updateLyricsPosition);
+    }
 }
 
-// Render all lyrics lines
 function renderLyrics() {
-  const lyricsContent = document.getElementById('lyricsContent');
-  if (!lyricsContent) return;
-  
-  lyricsContent.innerHTML = '';
-  
-  lyricsData.forEach((lyric, index) => {
-    const line = document.createElement('div');
-    line.className = 'lyric-line hidden'; // Start hidden
-    line.id = `lyric-${index}`;
-    line.textContent = lyric.text;
-    lyricsContent.appendChild(line);
-  });
+    const lyricsContent = document.getElementById('lyricsContent');
+    if (!lyricsContent) return;
+    
+    lyricsContent.innerHTML = '';
+    
+    lyricsData.forEach((lyric, index) => {
+        const line = document.createElement('div');
+        line.className = 'lyric-line hidden';
+        line.id = `lyric-${index}`;
+        line.textContent = lyric.text;
+        lyricsContent.appendChild(line);
+    });
 }
 
-// Start lyrics synchronization
 function startLyricsSync() {
-  if (syncInterval) clearInterval(syncInterval);
-  
-  syncInterval = setInterval(() => {
-    if (!audioPlayer || audioPlayer.paused) return;
+    if (syncInterval) clearInterval(syncInterval);
     
-    const currentTime = audioPlayer.currentTime;
-    syncLyrics(currentTime);
-  }, 100); // Check every 100ms for smooth updates
+    syncInterval = setInterval(() => {
+        if (!audioPlayer || audioPlayer.paused) return;
+        
+        const currentTime = audioPlayer.currentTime;
+        syncLyrics(currentTime);
+    }, 100);
 }
 
-// Stop lyrics synchronization
 function stopLyricsSync() {
-  if (syncInterval) {
-    clearInterval(syncInterval);
-    syncInterval = null;
-  }
+    if (syncInterval) {
+        clearInterval(syncInterval);
+        syncInterval = null;
+    }
 }
 
-// Sync lyrics with current audio time
 function syncLyrics(currentTime) {
-  // Find the current lyric index
-  let newIndex = -1;
-  
-  for (let i = lyricsData.length - 1; i >= 0; i--) {
-    if (currentTime >= lyricsData[i].time) {
-      newIndex = i;
-      break;
-    }
-  }
-  
-  // Only update if index changed
-  if (newIndex !== currentLyricIndex && newIndex >= 0) {
-    // Fade out previous lyric
-    if (currentLyricIndex >= 0) {
-      const prevLine = document.getElementById(`lyric-${currentLyricIndex}`);
-      if (prevLine) {
-        prevLine.classList.remove('active');
-        prevLine.classList.add('fading');
-      }
+    let newIndex = -1;
+    
+    for (let i = lyricsData.length - 1; i >= 0; i--) {
+        if (currentTime >= lyricsData[i].time) {
+            newIndex = i;
+            break;
+        }
     }
     
-    currentLyricIndex = newIndex;
-    
-    // Fade in new lyric
-    const newLine = document.getElementById(`lyric-${newIndex}`);
-    if (newLine) {
-      newLine.classList.remove('hidden', 'fading');
-      newLine.classList.add('active');
+    if (newIndex !== currentLyricIndex && newIndex >= 0) {
+        if (currentLyricIndex >= 0) {
+            const prevLine = document.getElementById(`lyric-${currentLyricIndex}`);
+            if (prevLine) {
+                prevLine.classList.remove('active');
+                prevLine.classList.add('fading');
+            }
+        }
+        
+        currentLyricIndex = newIndex;
+        
+        const newLine = document.getElementById(`lyric-${newIndex}`);
+        if (newLine) {
+            newLine.classList.remove('hidden', 'fading');
+            newLine.classList.add('active');
+        }
     }
-  }
 }
 
-// Update lyrics position on seek
 function updateLyricsPosition() {
-  if (audioPlayer) {
-    syncLyrics(audioPlayer.currentTime);
-  }
+    if (audioPlayer) {
+        syncLyrics(audioPlayer.currentTime);
+    }
 }
 
-// Reset lyrics to beginning
 function resetLyrics() {
-  // Hide all lyrics
-  lyricsData.forEach((_, index) => {
-    const line = document.getElementById(`lyric-${index}`);
-    if (line) {
-      line.classList.remove('active', 'fading');
-      line.classList.add('hidden');
-    }
-  });
-  
-  currentLyricIndex = -1;
+    lyricsData.forEach((_, index) => {
+        const line = document.getElementById(`lyric-${index}`);
+        if (line) {
+            line.classList.remove('active', 'fading');
+            line.classList.add('hidden');
+        }
+    });
+    
+    currentLyricIndex = -1;
 }
-
-// ========================================
-// Original Code Continues Below
-// ========================================
-
-onload = () => {
-  // Initialize lyrics system
-  initLyricsSystem();
-
-  // Play music when arriving from heart click (index.html)
-  if (sessionStorage.getItem('playFlowerMusic') === 'true') {
-    sessionStorage.removeItem('playFlowerMusic');
-    const flowerMusic = new Audio('music/sound.mp3');
-    flowerMusic.play().catch(() => {});
-  }
-
-  const c = setTimeout(() => {
-    document.body.classList.remove("not-loaded");
-
-    const titles = ('❤️❤️❤️').split('')
-    const titleElement = document.getElementById('title');
-    let index = 0;
-
-    function appendTitle() {
-      if (index < titles.length) {
-        titleElement.innerHTML += titles[index];
-        index++;
-        setTimeout(appendTitle, 300); // 1000ms delay
-      }
-    }
-
-    appendTitle();
-
-    clearTimeout(c);
-  }, 1000);
-
-  // Show album menu after 3 second delay
-  setTimeout(() => {
-    const albumContainer = document.querySelector('.album-menu-container');
-    if (albumContainer) {
-      albumContainer.classList.add('visible');
-      // Load default album
-      loadAlbumPhotos('album1').then(() => {
-        // Start auto-advance after album loads
-        startAutoAdvance();
-      });
-    }
-  }, 3000);
-};

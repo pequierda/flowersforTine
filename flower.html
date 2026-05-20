@@ -365,6 +365,24 @@
 
   <!-- Audio element for music -->
   <audio id="audioPlayer" src="music/sound.mp3" preload="auto"></audio>
+  
+  <!-- Interactive Elements Container -->
+  <div id="interactiveContainer"></div>
+  
+  <!-- Collection Counter -->
+  <div class="collection-counter" id="collectionCounter">
+    <span class="counter-icon">💌</span>
+    <span id="collectionCount">0</span> / 5 Messages Found
+  </div>
+  
+  <!-- Love Letter Modal -->
+  <div class="modal-backdrop" id="modalBackdrop"></div>
+  <div class="love-letter-modal" id="loveLetterModal">
+    <button class="modal-close" id="modalClose">×</button>
+    <h2>A Special Message For You ❤️</h2>
+    <div id="modalContent"></div>
+    <p class="signature">Forever yours</p>
+  </div>
 </body>
 
 </html>

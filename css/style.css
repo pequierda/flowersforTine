@@ -2014,4 +2014,329 @@ body {
   }
 }
 
+/* ========================================
+   Enhanced Interactive Elements
+   ======================================== */
+
+/* Interactive Firefly Lights */
+.firefly {
+    position: fixed;
+    width: 4px;
+    height: 4px;
+    background: radial-gradient(circle, #fff 0%, rgba(255, 255, 200, 0.8) 40%, transparent 100%);
+    border-radius: 50%;
+    pointer-events: auto;
+    cursor: pointer;
+    z-index: 50;
+    animation: firefly-float linear infinite;
+    transition: all 0.3s ease;
+}
+
+.firefly:hover {
+    transform: scale(2);
+    background: radial-gradient(circle, #fff 0%, rgba(255, 200, 100, 1) 40%, transparent 100%);
+    box-shadow: 0 0 20px rgba(255, 200, 100, 0.8), 0 0 40px rgba(255, 150, 50, 0.4);
+}
+
+.firefly.clicked {
+    animation: firefly-burst 0.5s ease forwards;
+}
+
+@keyframes firefly-float {
+    0%, 100% {
+        transform: translate(0, 0);
+        opacity: 0.6;
+    }
+    25% {
+        transform: translate(10px, -15px);
+        opacity: 1;
+    }
+    50% {
+        transform: translate(-5px, -25px);
+        opacity: 0.4;
+    }
+    75% {
+        transform: translate(15px, -10px);
+        opacity: 0.8;
+    }
+}
+
+@keyframes firefly-burst {
+    0% {
+        transform: scale(2);
+        opacity: 1;
+        box-shadow: 0 0 30px rgba(255, 200, 100, 1);
+    }
+    100% {
+        transform: scale(0);
+        opacity: 0;
+        box-shadow: 0 0 60px rgba(255, 200, 100, 0.5);
+    }
+}
+
+/* Floating Petals */
+.falling-petal {
+    position: fixed;
+    top: -10px;
+    width: 15px;
+    height: 15px;
+    background: linear-gradient(135deg, #ff6b9d 0%, #ff9a9e 50%, #fecfef 100%);
+    clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+    pointer-events: none;
+    z-index: 45;
+    animation: petal-fall linear infinite;
+    opacity: 0.7;
+}
+
+@keyframes petal-fall {
+    0% {
+        transform: translateY(0) rotate(0deg) translateX(0);
+        opacity: 0.7;
+    }
+    25% {
+        transform: translateY(25vh) rotate(90deg) translateX(30px);
+        opacity: 0.9;
+    }
+    50% {
+        transform: translateY(50vh) rotate(180deg) translateX(-20px);
+        opacity: 0.6;
+    }
+    75% {
+        transform: translateY(75vh) rotate(270deg) translateX(40px);
+        opacity: 0.8;
+    }
+    100% {
+        transform: translateY(100vh) rotate(360deg) translateX(-10px);
+        opacity: 0;
+    }
+}
+
+/* Hidden Messages */
+.hidden-message {
+    position: fixed;
+    padding: 10px 20px;
+    background: linear-gradient(135deg, rgba(255, 107, 157, 0.9), rgba(231, 76, 140, 0.9));
+    color: white;
+    border-radius: 20px;
+    font-family: 'Georgia', serif;
+    font-size: 14px;
+    font-weight: bold;
+    pointer-events: auto;
+    cursor: pointer;
+    z-index: 150;
+    opacity: 0;
+    transform: scale(0.5);
+    transition: all 0.5s ease;
+    box-shadow: 0 5px 20px rgba(255, 107, 157, 0.5);
+    white-space: nowrap;
+}
+
+.hidden-message.visible {
+    opacity: 1;
+    transform: scale(1);
+    animation: message-pulse 2s ease-in-out infinite;
+}
+
+.hidden-message:hover {
+    transform: scale(1.1);
+    box-shadow: 0 8px 30px rgba(255, 107, 157, 0.8);
+}
+
+.hidden-message.clicked {
+    animation: message-collect 0.5s ease forwards;
+}
+
+@keyframes message-pulse {
+    0%, 100% {
+        box-shadow: 0 5px 20px rgba(255, 107, 157, 0.5);
+    }
+    50% {
+        box-shadow: 0 5px 40px rgba(255, 107, 157, 0.8), 0 0 60px rgba(255, 107, 157, 0.3);
+    }
+}
+
+@keyframes message-collect {
+    0% {
+        transform: scale(1);
+        opacity: 1;
+    }
+    50% {
+        transform: scale(1.3);
+    }
+    100% {
+        transform: scale(0) translateY(-50px);
+        opacity: 0;
+    }
+}
+
+/* Cursor Trail Effect */
+.cursor-trail {
+    position: fixed;
+    width: 8px;
+    height: 8px;
+    background: radial-gradient(circle, rgba(255, 107, 157, 0.6) 0%, transparent 70%);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 9999;
+    animation: trail-fade 0.5s ease forwards;
+}
+
+@keyframes trail-fade {
+    0% {
+        transform: scale(1);
+        opacity: 0.6;
+    }
+    100% {
+        transform: scale(0);
+        opacity: 0;
+    }
+}
+
+/* Interactive Flower Glow */
+.flower:hover .flower__leafs {
+    filter: brightness(1.2) drop-shadow(0 0 15px rgba(255, 107, 157, 0.6));
+}
+
+.flower:hover .flower__light {
+    background-color: rgba(255, 255, 200, 0.8);
+    filter: blur(0.5vmin);
+}
+
+/* Love Letter Modal */
+.love-letter-modal {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0.8);
+    width: 90%;
+    max-width: 500px;
+    background: linear-gradient(135deg, #fff5f5 0%, #ffe6e6 100%);
+    padding: 40px;
+    border-radius: 20px;
+    box-shadow: 0 30px 80px rgba(0, 0, 0, 0.5), 0 0 40px rgba(255, 107, 157, 0.3);
+    z-index: 3000;
+    opacity: 0;
+    pointer-events: none;
+    transition: all 0.5s ease;
+    text-align: center;
+}
+
+.love-letter-modal.visible {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+    pointer-events: auto;
+}
+
+.love-letter-modal .modal-close {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    width: 30px;
+    height: 30px;
+    background: rgba(255, 107, 157, 0.8);
+    border: none;
+    border-radius: 50%;
+    color: white;
+    font-size: 18px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.love-letter-modal .modal-close:hover {
+    background: rgba(255, 107, 157, 1);
+    transform: scale(1.1);
+}
+
+.love-letter-modal h2 {
+    color: #c0392b;
+    font-size: 28px;
+    margin-bottom: 20px;
+    font-family: 'Georgia', serif;
+}
+
+.love-letter-modal p {
+    color: #555;
+    font-size: 16px;
+    line-height: 1.8;
+    margin-bottom: 15px;
+    font-family: 'Georgia', serif;
+}
+
+.love-letter-modal .signature {
+    color: #ff6b9d;
+    font-size: 20px;
+    font-weight: bold;
+    margin-top: 20px;
+    font-style: italic;
+}
+
+/* Modal Backdrop */
+.modal-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(5px);
+    z-index: 2999;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.5s ease;
+}
+
+.modal-backdrop.visible {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+/* Collection Counter */
+.collection-counter {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: rgba(255, 107, 157, 0.9);
+    color: white;
+    padding: 10px 20px;
+    border-radius: 25px;
+    font-family: 'Georgia', serif;
+    font-size: 16px;
+    z-index: 200;
+    box-shadow: 0 5px 20px rgba(255, 107, 157, 0.5);
+    opacity: 0;
+    transform: translateX(100px);
+    transition: all 0.5s ease;
+}
+
+.collection-counter.visible {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+.collection-counter .counter-icon {
+    margin-right: 8px;
+}
+
+/* Responsive adjustments for new elements */
+@media (max-width: 768px) {
+    .collection-counter {
+        top: 10px;
+        right: 10px;
+        padding: 8px 15px;
+        font-size: 14px;
+    }
+    
+    .love-letter-modal {
+        padding: 30px 20px;
+    }
+    
+    .love-letter-modal h2 {
+        font-size: 24px;
+    }
+    
+    .love-letter-modal p {
+        font-size: 14px;
+    }
+}
+
 /*# sourceMappingURL=style.css.map */
