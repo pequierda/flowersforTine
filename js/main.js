@@ -405,76 +405,76 @@ function openPhoto(albumName, photoNum, ext = '.jpg') {
 // IMPORTANT: You need to customize these timestamps to match your song!
 // Listen to your song and note when each line starts
 const lyricsData = [
-  // { time: 0, text: "Instrument Playing...." },
-  { time: 21, text: "Your morning eyes," },
-  { time: 24, text: "I could stare like watching stars" },
-  { time: 29, text: "I could walk you by," },
+  { time: 0, text: " " },
+//   { time: 21, text: "Your morning eyes," },
+//   { time: 24, text: "I could stare like watching stars" },
+//   { time: 29, text: "I could walk you by," },
 
-  { time: 32, text: "and I'll tell without a thought" },
+//   { time: 32, text: "and I'll tell without a thought" },
 
-  { time: 36, text: "You'd be mine," },
+//   { time: 36, text: "You'd be mine," },
 
-  { time: 38, text: "would you mind " },
+//   { time: 38, text: "would you mind " },
 
-  { time: 40, text: "if I took your hand tonight?" },
+//   { time: 40, text: "if I took your hand tonight?" },
 
-  { time: 44, text: "Know you're all" },
+//   { time: 44, text: "Know you're all" },
 
-  { time: 46, text: "that I want" },
+//   { time: 46, text: "that I want" },
 
-  { time: 49, text: "this life" },
+//   { time: 49, text: "this life" },
 
-  { time: 53, text: "I'll imagine we fell in love" },
+//   { time: 53, text: "I'll imagine we fell in love" },
 
-  { time: 56, text: "I'll nap under moonlight skies with you" },
+//   { time: 56, text: "I'll nap under moonlight skies with you" },
   
-  { time: 60, text: "I think I'll picture us," },
+//   { time: 60, text: "I think I'll picture us," },
 
-  { time: 63, text: "you with the waves" },
+//   { time: 63, text: "you with the waves" },
 
-  { time: 65, text: "The ocean's colors on your face" },
+//   { time: 65, text: "The ocean's colors on your face" },
 
-  { time: 69, text: "I'll leave my heart with your air" },
+//   { time: 69, text: "I'll leave my heart with your air" },
 
-  { time: 73, text: "So let me fly with you" },
+//   { time: 73, text: "So let me fly with you" },
 
-  { time: 77, text: "Will you be forever with me?" },
+//   { time: 77, text: "Will you be forever with me?" },
 
-  { time: 83, text: " " },
+//   { time: 83, text: " " },
 
-  { time: 118, text: "My love will always stay by you" },
+//   { time: 118, text: "My love will always stay by you" },
 
-  { time: 125, text: "I'll keep it safe," },
+//   { time: 125, text: "I'll keep it safe," },
 
-  { time: 128, text: "so don't you worry a thing" },
+//   { time: 128, text: "so don't you worry a thing" },
 
-  { time: 131, text: "I'll tell you I love you more" },
+//   { time: 131, text: "I'll tell you I love you more" },
     
-  { time: 135, text: "It's stuck with you forever," },
+//   { time: 135, text: "It's stuck with you forever," },
 
-  { time: 139, text: "so promise you won't let it go" },
+//   { time: 139, text: "so promise you won't let it go" },
 
-  { time: 143, text: "I'll trust the universe" },
+//   { time: 143, text: "I'll trust the universe" },
 
-  { time: 146, text: "will always bring me to you" },
+//   { time: 146, text: "will always bring me to you" },
 
-  { time: 152, text: "I'll imagine we fell in love" },
+//   { time: 152, text: "I'll imagine we fell in love" },
 
-   { time: 155, text: "I'll nap under moonlight skies with you" },
+//    { time: 155, text: "I'll nap under moonlight skies with you" },
   
-  { time: 159, text: "I think I'll picture us," },
+//   { time: 159, text: "I think I'll picture us," },
 
-  { time: 161, text: "you with the waves" },
+//   { time: 161, text: "you with the waves" },
 
-  { time: 163, text: "The ocean's colors on your face" },
+//   { time: 163, text: "The ocean's colors on your face" },
 
-  { time: 167, text: "I'll leave my heart with your air" },
+//   { time: 167, text: "I'll leave my heart with your air" },
 
-  { time: 172, text: "So let me fly with you" },
+//   { time: 172, text: "So let me fly with you" },
 
-  { time: 176, text: "Will you be forever with me?" },
+//   { time: 176, text: "Will you be forever with me?" },
 
- { time: 183, text: " " }
+//  { time: 183, text: " " }
 
 
 
