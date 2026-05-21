@@ -429,6 +429,44 @@ body {
     animation: heart-pulse 0.5s ease-in-out infinite;
 }
 
+/* Moon Container */
+.moon-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 4;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 2s ease-in-out;
+}
+
+.moon-container.visible {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.moon-video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0.6;
+}
+
+.moon-glow {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(ellipse at center, rgba(255, 255, 200, 0.15) 0%, transparent 70%);
+    pointer-events: none;
+}
+
 /* Floating Hearts */
 .floating-hearts {
     position: fixed;

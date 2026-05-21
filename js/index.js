@@ -37,6 +37,8 @@ const flowerOverlay = document.getElementById('flowerOverlay');
 const flowerFrame = document.getElementById('flowerFrame');
 const particlesContainer = document.getElementById('particlesContainer');
 const floatingHearts = document.getElementById('floatingHearts');
+const moonContainer = document.getElementById('moonContainer');
+const moonVideo = document.getElementById('moonVideo');
 
 // Sound effects (using Web Audio API for simple sounds)
 const AudioContext = window.AudioContext || window.webkitAudioContext;
@@ -161,6 +163,11 @@ function startCountdown() {
             clearInterval(countInterval);
             countdownNumber.textContent = '❤️';
             
+            // Show moon video after the heart appears
+            setTimeout(() => {
+                showMoon();
+            }, 500);
+            
             setTimeout(() => {
                 countdownOverlay.style.transition = 'opacity 1s ease';
                 countdownOverlay.style.opacity = '0';
@@ -172,6 +179,16 @@ function startCountdown() {
             }, 1000);
         }
     }, 1000);
+}
+
+// Show moon video
+function showMoon() {
+    if (moonContainer) {
+        moonContainer.classList.add('visible');
+        if (moonVideo) {
+            moonVideo.play().catch(() => {});
+        }
+    }
 }
 
 // Show envelope

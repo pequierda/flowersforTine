@@ -420,6 +420,14 @@ onload = () => {
     // Original initialization
     initLyricsSystem();
     
+    // Show moon video after a delay
+    setTimeout(() => {
+        const moonContainer = document.querySelector('.moon-container');
+        if (moonContainer) {
+            moonContainer.classList.add('visible');
+        }
+    }, 3000);
+    
     // Play music when arriving from heart click (index.html)
     if (sessionStorage.getItem('playFlowerMusic') === 'true') {
         sessionStorage.removeItem('playFlowerMusic');
