@@ -138,9 +138,20 @@ function showHiddenMessage() {
     message.className = 'hidden-message';
     message.textContent = GARDEN_CONFIG.hiddenMessages[collectedMessages];
     
-    // Random position (avoiding edges)
-    const x = Math.random() * 70 + 15;
-    const y = Math.random() * 60 + 20;
+    // Mobile-responsive positioning
+    const isMobile = window.innerWidth <= 480;
+    let x, y;
+    
+    if (isMobile) {
+        // On mobile, use wider margins and avoid bottom area
+        x = Math.random() * 60 + 20; // 20% to 80% of screen width
+        y = Math.random() * 40 + 15; // 15% to 55% of screen height (avoid bottom)
+    } else {
+        // On desktop, use original positioning
+        x = Math.random() * 70 + 15;
+        y = Math.random() * 60 + 20;
+    }
+    
     message.style.left = x + '%';
     message.style.top = y + '%';
     

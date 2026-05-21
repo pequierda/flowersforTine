@@ -444,8 +444,12 @@ body {
 .floating-heart {
     position: absolute;
     font-size: 20px;
+    color: white;
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.8), 0 0 20px rgba(255, 107, 157, 0.5);
     animation: float-heart linear infinite;
-    opacity: 0.7;
+    opacity: 0.9;
+    font-weight: bold;
+    white-space: nowrap;
 }
 
 @keyframes float-heart {
@@ -495,19 +499,142 @@ body {
         font-size: 20px;
     }
     
+    .click-hint {
+        font-size: 14px;
+        bottom: -35px;
+    }
+    
     .letter-content {
-        padding: 30px 20px;
+        padding: 25px 15px;
+        max-width: 95vw;
+    }
+    
+    .letter-content::before {
+        top: 5px;
+        left: 5px;
+        right: 5px;
+        bottom: 5px;
     }
     
     .letter-header {
-        font-size: 24px;
+        font-size: 22px;
+        margin-bottom: 15px;
     }
     
     .letter-body {
+        font-size: 15px;
+        line-height: 1.6;
+        min-height: 80px;
+    }
+    
+    .letter-footer {
+        font-size: 17px;
+    }
+    
+    .continue-btn {
+        padding: 12px 30px;
         font-size: 16px;
+        margin-top: 15px;
     }
     
     .countdown-number {
-        font-size: 100px;
+        font-size: 80px;
+    }
+    
+    /* Floating hearts responsiveness */
+    .floating-heart {
+        font-size: 14px !important;
+        max-width: 90vw;
+        text-align: center;
+    }
+    
+    /* Title responsiveness */
+    .title {
+        font-size: 24px;
+        letter-spacing: 3px !important;
+        padding: 0 10px;
+    }
+    
+    /* Heart button responsiveness */
+    .btn.heart {
+        transform: scale(1.5);
+    }
+    
+    .heart-button-container {
+        top: 65vh;
+    }
+}
+
+/* Extra small devices */
+@media (max-width: 400px) {
+    .envelope {
+        width: 220px;
+        height: 150px;
+    }
+    
+    .envelope-heart {
+        font-size: 35px;
+    }
+    
+    .envelope-text {
+        font-size: 18px;
+    }
+    
+    .letter-content {
+        padding: 20px 12px;
+    }
+    
+    .letter-header {
+        font-size: 20px;
+    }
+    
+    .letter-body {
+        font-size: 14px;
+    }
+    
+    .countdown-number {
+        font-size: 60px;
+    }
+    
+    .title {
+        font-size: 20px;
+        letter-spacing: 2px !important;
+    }
+    
+    .floating-heart {
+        font-size: 12px !important;
+    }
+    
+    .continue-btn {
+        padding: 10px 25px;
+        font-size: 14px;
+    }
+}
+
+/* Landscape mode on mobile */
+@media (max-width: 800px) and (orientation: landscape) {
+    .countdown-number {
+        font-size: 80px;
+    }
+    
+    .envelope {
+        width: 280px;
+        height: 180px;
+    }
+    
+    .love-letter {
+        max-width: 70vw;
+    }
+    
+    .letter-content {
+        padding: 20px 25px;
+    }
+    
+    .title {
+        font-size: 28px;
+    }
+    
+    .floating-heart {
+        font-size: 16px !important;
     }
 }

@@ -2114,12 +2114,12 @@ body {
 /* Hidden Messages */
 .hidden-message {
     position: fixed;
-    padding: 10px 20px;
-    background: linear-gradient(135deg, rgba(255, 107, 157, 0.9), rgba(231, 76, 140, 0.9));
+    padding: 12px 24px;
+    background: linear-gradient(135deg, rgba(255, 107, 157, 0.95), rgba(231, 76, 140, 0.95));
     color: white;
-    border-radius: 20px;
+    border-radius: 25px;
     font-family: 'Georgia', serif;
-    font-size: 14px;
+    font-size: 15px;
     font-weight: bold;
     pointer-events: auto;
     cursor: pointer;
@@ -2127,8 +2127,12 @@ body {
     opacity: 0;
     transform: scale(0.5);
     transition: all 0.5s ease;
-    box-shadow: 0 5px 20px rgba(255, 107, 157, 0.5);
+    box-shadow: 0 5px 25px rgba(255, 107, 157, 0.6), 0 0 15px rgba(255, 255, 255, 0.3);
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
     white-space: nowrap;
+    max-width: 90vw;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .hidden-message.visible {
@@ -2328,6 +2332,8 @@ body {
     
     .love-letter-modal {
         padding: 30px 20px;
+        width: 95%;
+        max-width: 400px;
     }
     
     .love-letter-modal h2 {
@@ -2336,6 +2342,52 @@ body {
     
     .love-letter-modal p {
         font-size: 14px;
+        line-height: 1.6;
+    }
+    
+    /* Hidden messages mobile responsive */
+    .hidden-message {
+        font-size: 13px;
+        padding: 10px 18px;
+        max-width: 85vw;
+    }
+}
+
+@media (max-width: 480px) {
+    .hidden-message {
+        font-size: 12px;
+        padding: 8px 14px;
+        max-width: 90vw;
+        white-space: normal;
+        word-wrap: break-word;
+        text-align: center;
+    }
+    
+    .love-letter-modal {
+        padding: 25px 15px;
+    }
+    
+    .love-letter-modal h2 {
+        font-size: 20px;
+    }
+    
+    .love-letter-modal p {
+        font-size: 13px;
+    }
+    
+    .collection-counter {
+        top: 8px;
+        right: 8px;
+        padding: 6px 12px;
+        font-size: 12px;
+    }
+}
+
+@media (max-width: 360px) {
+    .hidden-message {
+        font-size: 11px;
+        padding: 7px 12px;
+        max-width: 92vw;
     }
 }
 
