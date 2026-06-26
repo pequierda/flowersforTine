@@ -61,11 +61,13 @@ function initNarratorVoices() {
 function pickNarratorVoice() {
     const voices = speechSynthesis.getVoices();
     const preferred = [
-        'Google UK English Female',
-        'Microsoft Zira',
-        'Samantha',
-        'Karen',
-        'Moira',
+        'Google UK English Male',
+        'Microsoft David',
+        'Microsoft Mark',
+        'Daniel',
+        'Alex',
+        'Fred',
+        'Google US English Male',
         'Google US English'
     ];
 
@@ -74,7 +76,8 @@ function pickNarratorVoice() {
         if (match) return match;
     }
 
-    return voices.find(v => v.lang.startsWith('en') && v.name.toLowerCase().includes('female'))
+    return voices.find(v => v.lang.startsWith('en') && v.name.toLowerCase().includes('male'))
+        || voices.find(v => v.lang.startsWith('en') && !v.name.toLowerCase().includes('female'))
         || voices.find(v => v.lang.startsWith('en'))
         || voices[0];
 }
