@@ -41,6 +41,107 @@ const modalBackdrop = document.getElementById('modalBackdrop');
 const loveLetterModal = document.getElementById('loveLetterModal');
 const modalContent = document.getElementById('modalContent');
 const modalClose = document.getElementById('modalClose');
+const narratorStatus = document.getElementById('narratorStatus');
+const narratorStatusText = document.getElementById('narratorStatusText');
+
+// Narrator (Web Speech API)
+let letterUtterance = null;
+let voicesReady = false;
+
+function initNarratorVoices() {
+    if (voicesReady || !window.speechSynthesis) return;
+    voicesReady = speechSynthesis.getVoices().length > 0;
+    if (!voicesReady) {
+        speechSynthesis.addEventListener('voiceschanged', () => {
+            voicesReady = true;
+        }, { once: true });
+    }
+}
+
+function pickNarratorVoice() {
+    const voices = speechSynthesis.getVoices();
+    const preferred = [
+        'Google UK English Female',
+        'Microsoft Zira',
+        'Samantha',
+        'Karen',
+        'Moira',
+        'Google US English'
+    ];
+
+    for (const name of preferred) {
+        const match = voices.find(v => v.name.includes(name));
+        if (match) return match;
+    }
+
+    return voices.find(v => v.lang.startsWith('en') && v.name.toLowerCase().includes('female'))
+        || voices.find(v => v.lang.startsWith('en'))
+        || voices[0];
+}
+
+function getLetterNarrationText() {
+    const letter = GARDEN_CONFIG.finalLetter;
+    const start = letter.indexOf('My Dearest Adii,');
+    return start >= 0 ? letter.slice(start) : letter;
+}
+
+function setNarratorStatus(text, active) {
+    if (narratorStatusText) narratorStatusText.textContent = text;
+    if (narratorStatus) narratorStatus.classList.toggle('active', active);
+}
+
+function stopNarration() {
+    if (window.speechSynthesis) {
+        speechSynthesis.cancel();
+    }
+    letterUtterance = null;
+    setNarratorStatus('', false);
+}
+
+function startNarration() {
+    if (!window.speechSynthesis) {
+        setNarratorStatus('Narrator not supported on this device', true);
+        return;
+    }
+
+    initNarratorVoices();
+
+    const speak = () => {
+        stopNarration();
+
+        const text = getLetterNarrationText();
+        letterUtterance = new SpeechSynthesisUtterance(text);
+        letterUtterance.rate = 0.88;
+        letterUtterance.pitch = 1;
+        letterUtterance.volume = 1;
+        letterUtterance.lang = 'en-US';
+
+        const voice = pickNarratorVoice();
+        if (voice) letterUtterance.voice = voice;
+
+        letterUtterance.onstart = () => {
+            setNarratorStatus('Reading for you...', true);
+        };
+
+        letterUtterance.onend = () => {
+            setNarratorStatus('Finished reading ❤️', true);
+            setTimeout(() => setNarratorStatus('', false), 3000);
+        };
+
+        letterUtterance.onerror = () => {
+            setNarratorStatus('', false);
+        };
+
+        speechSynthesis.speak(letterUtterance);
+    };
+
+    if (speechSynthesis.getVoices().length === 0) {
+        speechSynthesis.addEventListener('voiceschanged', speak, { once: true });
+        speechSynthesis.getVoices();
+    } else {
+        speak();
+    }
+}
 
 // ========================================
 // Firefly System
@@ -210,10 +311,11 @@ function showFinalLetter() {
     modalContent.innerHTML = '';
     typeWriter(GARDEN_CONFIG.finalLetter, modalContent, 30);
     
-    // Show modal
+    // Show modal and start narrator
     setTimeout(() => {
         loveLetterModal.classList.add('visible');
         playMagicSound();
+        startNarration();
     }, 500);
 }
 
@@ -245,6 +347,7 @@ function typeWriter(text, element, speed) {
 }
 
 function closeModal() {
+    stopNarration();
     loveLetterModal.classList.remove('visible');
     modalBackdrop.classList.remove('visible');
 }
@@ -417,6 +520,8 @@ window.openPhoto = function(albumName, photoNum, ext) {
 // ========================================
 
 onload = () => {
+    initNarratorVoices();
+
     // Original initialization
     initLyricsSystem();
     

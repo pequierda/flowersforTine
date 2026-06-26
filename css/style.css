@@ -2258,6 +2258,33 @@ body {
     font-family: 'Georgia', serif;
 }
 
+.narrator-status {
+    display: none;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin-bottom: 16px;
+    padding: 8px 16px;
+    background: rgba(255, 107, 157, 0.15);
+    border-radius: 20px;
+    color: #c0392b;
+    font-size: 14px;
+    font-family: 'Georgia', serif;
+}
+
+.narrator-status.active {
+    display: inline-flex;
+}
+
+.narrator-status .narrator-icon {
+    animation: narrator-pulse 1.2s ease-in-out infinite;
+}
+
+@keyframes narrator-pulse {
+    0%, 100% { opacity: 0.6; transform: scale(1); }
+    50% { opacity: 1; transform: scale(1.15); }
+}
+
 .love-letter-modal p {
     color: #555;
     font-size: 16px;
