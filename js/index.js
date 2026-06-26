@@ -5,7 +5,6 @@
 // Configuration
 const CONFIG = {
     countdownDuration: 3, // seconds
-    letterText: "Every moment with you feels like a beautiful dream I never want to wake up from. Your smile lights up my world brighter than a thousand stars. Your laughter is my favorite melody. Today, I've created something special just for you - a garden of flowers that will bloom forever, just like my love for you.",
     titleText: 'FLOWERS FOR ADII',
     floatingHeartsMessages: [
         'I Love You ❤️',
@@ -28,8 +27,6 @@ const countdownOverlay = document.getElementById('countdownOverlay');
 const countdownNumber = document.getElementById('countdownNumber');
 const heartbeat = document.getElementById('heartbeat');
 const envelopeContainer = document.getElementById('envelopeContainer');
-const loveLetter = document.getElementById('loveLetter');
-const letterBody = document.getElementById('letterBody');
 const mainTitle = document.getElementById('mainTitle');
 const heartButtonContainer = document.getElementById('heartButtonContainer');
 const openBtn = document.getElementById('openBtn');
@@ -197,58 +194,22 @@ function showEnvelope() {
     envelopeContainer.style.animation = 'envelope-float 3s ease-in-out infinite';
 }
 
-// Typewriter effect for letter
-function typeWriter(text, element, speed = 50) {
-    let i = 0;
-    element.innerHTML = '<span class="typing-text"></span>';
-    const typingElement = element.querySelector('.typing-text');
-    
-    function type() {
-        if (i < text.length) {
-            typingElement.textContent += text.charAt(i);
-            i++;
-            setTimeout(type, speed);
-        } else {
-            // Remove cursor effect
-            typingElement.classList.remove('typing-text');
-        }
-    }
-    
-    type();
-}
+// Open flower garden (flowers + carousel in iframe)
+function openFlowerGarden() {
+    const heartSound = new Audio('music/sound.mp3');
+    heartSound.play().catch(() => {});
+    audioStartTime = Date.now();
+    audioStarted = true;
 
-// Show love letter
-function showLoveLetter() {
-    envelopeContainer.classList.add('opening');
     playMagicSound();
-    
-    setTimeout(() => {
-        envelopeContainer.style.display = 'none';
-        loveLetter.style.display = 'block';
-        typeWriter(CONFIG.letterText, letterBody, 40);
-    }, 1000);
-}
 
-// Show title
-function showTitle() {
-    loveLetter.style.display = 'none';
-    mainTitle.style.display = 'flex';
-    
-    // Create letter spans with delays
-    const text = CONFIG.titleText.split('');
-    mainTitle.innerHTML = '';
-    
-    text.forEach((char, index) => {
-        const span = document.createElement('span');
-        span.textContent = char === ' ' ? '\u00A0' : char;
-        span.style.animationDelay = (index * 0.1) + 's';
-        mainTitle.appendChild(span);
-    });
-    
-    // Show heart button after title
-    setTimeout(() => {
-        heartButtonContainer.style.display = 'flex';
-    }, 2000);
+    flowerOverlay.style.display = 'block';
+    flowerFrame.src = 'flower.html';
+
+    envelopeContainer.style.display = 'none';
+    if (moonContainer) moonContainer.classList.remove('visible');
+    heartButtonContainer.style.display = 'none';
+    mainTitle.style.display = 'none';
 }
 
 // Initialize everything
@@ -261,37 +222,17 @@ function init() {
         startCountdown();
     }, 500);
     
-    // Envelope click handler
+    // "For You" envelope — open flowers directly (no letter step)
     envelopeContainer.addEventListener('click', () => {
         playClickSound();
-        showLoveLetter();
-    });
-    
-    // Continue button handler
-    document.getElementById('continueBtn').addEventListener('click', () => {
-        playClickSound();
-        showTitle();
+        envelopeContainer.classList.add('opening');
+        setTimeout(openFlowerGarden, 600);
     });
     
     // Heart button handler - open flower garden
     openBtn.addEventListener('click', (e) => {
         e.preventDefault();
-        
-        // Play music (user gesture required)
-        const heartSound = new Audio('music/sound.mp3');
-        heartSound.play().catch(() => {});
-        audioStartTime = Date.now();
-        audioStarted = true;
-        
-        playMagicSound();
-        
-        // Show flower in iframe
-        flowerOverlay.style.display = 'block';
-        flowerFrame.src = 'flower.html';
-        
-        // Hide heart button and title
-        heartButtonContainer.style.display = 'none';
-        mainTitle.style.display = 'none';
+        openFlowerGarden();
     });
     
     // Listen for messages from iframe and send audio time
